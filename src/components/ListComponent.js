@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import PBFS from '../imgs/Powered-by-Foursquare-black-300.png';
 
 class ListComponent extends React.Component {
   render() {
@@ -6,7 +7,7 @@ class ListComponent extends React.Component {
       <section id="listComponent">
         <div id="listbox" className="listbox show-list">
           <button id="toggle-pane"></button>
-          <div className="list-top-spacer">Powered by FourSquare Logo</div>
+          <div className="list-top-spacer"></div>
             <ul>
 
               <li className="restaurant-list-item">
@@ -22,7 +23,7 @@ class ListComponent extends React.Component {
               </li>
 
             </ul>
-          <div className="list-bottom-spacer">Powered by FourSquare Logo</div>
+          <div className="list-bottom-spacer"><img src={PBFS} alt="Powered by Foursquare"/></div>
         </div>
       </section>
     )
