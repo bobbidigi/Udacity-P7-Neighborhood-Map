@@ -1,0 +1,305 @@
+html,body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.appWrapper {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Roboto', Arial, sans-serif;
+  width: 100vw;
+  height: 100vh;
+}
+
+#filterComponent {
+  width: 100%;
+  position: absolute;
+}
+
+.filterContainer {
+  background-color: white;
+  width: 100%;
+  box-sizing: border-box;
+  position:relative;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 8;
+  padding: 8px;
+  text-align: left;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  max-width: 480px;
+}
+
+.filterText {
+  font-size: 16px;
+  width: 88%;
+  height: 35px;
+  border: 1px solid #0000001f;
+  vertical-align: middle;
+  padding-left: 45px;
+  font-weight: 100;
+  color: #000000de;
+}
+
+.hamburger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  background-size: 24px 24px;
+  height: 37px;
+  width: 37px;
+  padding: 28px;
+  background-color: #fff0;
+  background-image: url('./imgs/ic_menu_burger_default_24dp.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 0;
+  cursor: pointer;
+}
+
+.close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 28px;
+  background-size: 24px 24px;
+  height: 37px;
+  width: 37px;
+  background-image: url('./imgs/ic_close_x_gray_24dp.png');
+  background-color: #fff0;
+  background-position: center;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  border: 0;
+}
+
+
+#listComponent {
+  width: 100%;
+}
+
+.hide-list {
+  overflow: hidden;
+  bottom: -100%;
+  transition: transform 0.3s;
+  transform: translateY(100vh);
+}
+
+.show-list {
+  transition: transform 0.3s;
+  transform: translateY(0);
+}
+
+#toggle-pane {
+  display: block;
+  width: 35px;
+  height: 48px;
+  border-radius: 2px;
+  position: relative;
+  z-index: 4;
+  top: 55px;
+  left: 413px;
+  background: #fff;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  background-image: url(./imgs/close_arrow.png);
+  background-size: 16px 16px;
+  background-position: 8px;
+  background-repeat: no-repeat;
+}
+
+.hide-pane {
+  overflowY: hidden;
+  transition: transform 0.3s;
+  transform: translateX(-414px);
+}
+
+
+.listbox  {
+  position: absolute;
+  background: #fff;
+  width: 100vw;
+  height: 100vh;
+  overflowY:auto;
+  top: 0px;
+  z-index: 4;
+
+}
+
+.list-top-spacer {
+  height: 56px;
+}
+
+ul {
+  margin: 0;
+  display: block;
+  padding: 8px 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.restaurant-list-item {
+  max-width: 480px;
+  text-align: left;
+
+  list-style: none;
+  margin: 0 auto;
+  outline: 0;
+  vertical-align: baseline;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  min-height: 80px;
+  line-height: 16px;
+  padding: 8px 0;
+}
+
+.restaurant-list-item p {
+  margin: 0;
+  color: #6669;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.list-info-wrapper {
+  white-space: nowrap;
+  margin-right: 95px;
+}
+
+.list-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #0009;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: initial;
+  margin: 0;
+}
+
+p.rating {
+  color: #e7711b;
+  padding-top: 3px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.review-count {
+  color: #999;
+}
+
+.list-image {
+  display: inline-block;
+  float: right;
+  position: relative;
+  height: 80px;
+  width: 80px;
+}
+
+.address {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list-bottom-spacer {
+  height: 104px;
+  display: block;
+}
+
+#list-toggler {
+  width: 100vw;
+  position: absolute;
+  bottom: 0;
+}
+
+.toggle-container {
+  max-width: 480px;
+  display: block;
+  position: relative;
+  margin: 0 auto;
+  z-index: 13;
+  height: 48px;
+  background: #f5f5f5;
+  box-shadow: 0 -1px 2px rgba(0,0,0,0.3);
+}
+
+.toggle-list {
+  width: 100%;
+  position: absolute;
+  left: 16px;
+  top: 0;
+  max-width: 44%;
+  padding: 12px 0 8px 0;
+  border: 0;
+  min-width: 88%;
+}
+
+.list-toggle {
+  background: transparent;
+  text-align: left;
+  color: #999;
+  padding-left: 28px;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: 600;
+  height: 32px;
+  box-sizing: border-box;
+  background-image: url(./imgs/maps_grey600_24dp.png);
+  background-size: 24px 24px;
+  margin: 0 4px 0 0;
+  height: 24px;
+  background-position: left;
+  background-repeat: no-repeat;
+  border: 0;
+}
+
+.button-wrapper {
+  padding: 0 8px 0 5px;
+}
+
+#map {
+  height: 100vh;
+  width: 100vw;
+}
+
+
+@media screen and (min-width: 750px) {
+  #filterComponent {
+    max-width: 414px;
+  }
+  #listComponent {
+    max-width: 414px;
+  }
+  .listbox {
+    max-width: 414px;
+  }
+  .list-toggler {
+    visibility: hidden;
+    display: none;
+  }
+  .toggle-container {
+    margin: 0;
+    visibility: hidden;
+    display: none;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  #toggle-pane {
+    visibility: hidden;
+    display: none;
+  }
+}
