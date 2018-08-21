@@ -5,8 +5,10 @@ class ListComponent extends React.Component {
   render() {
     return (
       <section id="listComponent">
-        <div id="listbox" className="listbox show-list">
-          <button id="toggle-pane"></button>
+        <div id="listbox" className="listbox">
+          <button id="toggle-pane"
+            onClick={ (e) => this.props.toggleClassName(e)  }>
+            ></button>
           <div className="list-top-spacer"></div>
             <ul>
 

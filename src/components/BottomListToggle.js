@@ -7,7 +7,9 @@ class BottomListToggle extends React.Component {
         <div className="toggle-container">
           <div className="toggle-list">
             <div className="button-wrapper">
-              <button id="list-toggle" className="list-toggle">
+              <button id="list-toggle"
+                className='list-toggle'
+                onClick={(e) => this.props.toggleClassName(e) }>
                 show map
               </button>
             </div>
