@@ -6,6 +6,7 @@ import showMapIcon from './imgs/icons/maps_grey600_24dp.png'
 import showListIcon from './imgs/icons/list_grey600_24dp.png'
 import openListImage from './imgs/icons/open_arrow.png'
 import closeListImage from './imgs/icons/close_arrow.png'
+import * as FS from './utils/FSAPI'
 import './App.css';
 
 class App extends Component {
@@ -13,7 +14,9 @@ class App extends Component {
     super(props)
       this.state = {
         showList: true,
-        showPane: true
+        showPane: true,
+        restaurants: [],
+        meta: []
       }
       this.handleClickBottomToggler = this.handleClickBottomToggler.bind(this)
       this.handleClickPaneToggler = this.handleClickPaneToggler.bind(this)
@@ -21,6 +24,17 @@ class App extends Component {
   }
 
   componentDidMount() {
+
+    FS.getRestaurants()
+    .then(data=> {
+      console.log(data.response.groups[0].items);
+      this.setState({
+        meta: data.meta,
+        restaurants: data.response.groups[0].items
+      })
+    })
+
+
 
     window.addEventListener('resize', () => {
 
