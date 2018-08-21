@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import FilterComponent from './components/FilterComponent'
 import ListComponent from './components/ListComponent'
 import BottomListToggle from './components/BottomListToggle'
-import showMapIcon from './imgs/maps_grey600_24dp.png'
-import showListIcon from './imgs/list_grey600_24dp.png'
-import openListImage from './imgs/open_arrow.png'
-import closeListImage from './imgs/close_arrow.png'
+import showMapIcon from './imgs/icons/maps_grey600_24dp.png'
+import showListIcon from './imgs/icons/list_grey600_24dp.png'
+import openListImage from './imgs/icons/open_arrow.png'
+import closeListImage from './imgs/icons/close_arrow.png'
 import './App.css';
 
 class App extends Component {

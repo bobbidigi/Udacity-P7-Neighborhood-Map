@@ -58,7 +58,7 @@ html,body {
   width: 37px;
   padding: 28px;
   background-color: #fff0;
-  background-image: url('./imgs/ic_menu_burger_default_24dp.png');
+  background-image: url(./imgs/icons/ic_menu_burger_default_24dp.png);
   background-position: center;
   background-repeat: no-repeat;
   border: 0;
@@ -73,7 +73,7 @@ html,body {
   background-size: 24px 24px;
   height: 37px;
   width: 37px;
-  background-image: url('./imgs/ic_close_x_gray_24dp.png');
+  background-image: url(./imgs/icons/ic_close_x_gray_24dp.png);
   background-color: #fff0;
   background-position: center;
   cursor: pointer;
@@ -112,7 +112,7 @@ html,body {
   padding: 0;
   border: 0;
   box-shadow: 0 0 8px rgba(0,0,0,0.3);
-  background-image: url(./imgs/close_arrow.png);
+  background-image: url(./imgs/icons/close_arrow.png);
   background-size: 16px 16px;
   background-position: 8px;
   background-repeat: no-repeat;
@@ -262,7 +262,7 @@ p.rating {
   font-weight: 600;
   height: 32px;
   box-sizing: border-box;
-  background-image: url(./imgs/maps_grey600_24dp.png);
+  background-image: url(./imgs/icons/maps_grey600_24dp.png);
   background-size: 24px 24px;
   margin: 0 4px 0 0;
   height: 24px;
