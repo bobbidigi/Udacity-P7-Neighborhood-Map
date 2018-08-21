@@ -5,6 +5,7 @@ class ListItem extends React.Component {
     return (
       <li className="restaurant-list-item">
         <img aria-hidden="true" className="list-image" src="https://lh4.googleusercontent.com/-9f4Vp0wMENA/WXCuIIFyABI/AAAAAAAAAME/QtKJtspF7qcQVGxiZpHRrsVRx73qLpENwCLIBGAYYCw/w240-h240-p-k-no/" alt="A Great restaurant"/>
+
         <div className="list-info-wrapper">
           <h5 className="list-title">Smokehouse Barbecue - Kansas City, Missouri</h5>
           <p className="rating">4.0 - AWESOME!!!<span className="review-count">  342 reviews</span></p>
