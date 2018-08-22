@@ -128,14 +128,19 @@ class App extends Component {
 
   handleClickPaneToggler(e) {
     let list = document.getElementById('listbox')
+    let pane = document.getElementById('toggle-pane')
     if (this.state.showPane && list) {
       list.className= 'listbox hide-pane'
       e.target.style.backgroundImage= 'url('+openListImage+')';
       e.target.setAttribute('alt', 'open pane')
+      pane.setAttribute('aria-label', 'Expand side panel')
+      pane.setAttribute('alt', 'Expand side panel')
     } else {
       list.className= 'listbox show-pane'
       e.target.style.backgroundImage= 'url('+closeListImage+')';
       e.target.setAttribute('alt', 'close pane')
+      pane.setAttribute('aria-label', 'Close side panel')
+      pane.setAttribute('alt', 'Close side panel')
     }
 
     this.setState({

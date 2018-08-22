@@ -8,8 +8,10 @@ class ListComponent extends React.Component {
       <section id="listComponent">
         <div id="listbox" className="listbox">
           <button id="toggle-pane"
-            onClick={ (e) => this.props.toggleClassName(e)  }>
-            ></button>
+            onClick={ (e) => this.props.toggleClassName(e)  }
+            aria-label="Collapse side panel"
+            alt="Collapse side panel">
+            </button>
             <div className="list-overflow">
               <div className="list-top-spacer"></div>
                   <ListItem listData={this.props.listData}/>
