@@ -18,7 +18,7 @@ class App extends Component {
         showPane: true,
         meta: [],
         venue_ids: [],
-        restaurants: [], // api only loads locations once to increase speed and reduce quotas
+        allRestaurants: [], // api only loads locations once to increase speed and reduce quotas
         query: '',
         filterResults: [] // copy of restaurants data to filter
       }
@@ -65,7 +65,7 @@ class App extends Component {
         .then(venueDetails => venueDetails)
         .then(venueDetails =>
           this.setState({
-            restaurants: venueDetails,
+            allRestaurants: venueDetails,
             filterResults: venueDetails
           })
 
@@ -153,7 +153,7 @@ class App extends Component {
   clearQuery = () => {
    this.setState({
      query: '',
-     filterResults: [...this.state.restaurants]
+     filterResults: [...this.state.allRestaurants]
     })
   }
 
@@ -170,12 +170,12 @@ search = (query) => {
   // if the searchBar is empty clear/ed clear the searchResults too
   if (query === '') {
     this.setState({
-      filterResults: [...this.state.restaurants]
+      filterResults: [...this.state.allRestaurants]
     });
     return;
   }
   this.setState({
-    filterResults: [...this.state.restaurants].filter(restaurant =>
+    filterResults: [...this.state.allRestaurants].filter(restaurant =>
       // convert the input into lowercase by using toLowerCase() then use indexOf the query converted to lowercase to catch both upper and lower case queries
       restaurant.name.toLowerCase().indexOf(query.toLowerCase()) > -1)
 
