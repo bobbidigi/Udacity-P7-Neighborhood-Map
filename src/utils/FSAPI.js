@@ -13,9 +13,9 @@ export const getRestaurants = () =>
         .catch(err => console.log(err))
 
 export const getRestaurantDetails = (venueID) =>
-    fetch(`${URL}/${venueID}?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`)
+    fetch(`${URL}/${venueID}?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${VERSION}`)
         .then(response => response.json())
-        .then(response => console.log(response))
+        .then(details => details)
         .catch(err => console.log(err))
 
 export const search = () =>
