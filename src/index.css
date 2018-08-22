@@ -135,10 +135,32 @@ html,body {
   background: #fff;
   width: 100vw;
   height: 100vh;
-  overflowY:auto;
   top: 0px;
   z-index: 4;
+}
 
+.list-overflow {
+  background: #fff;
+  width: 100%;
+  height: 100vh;
+  top: 0px;
+  z-index: 4;
+  overflow: scroll;
+  scroll-behavior: smooth;
+}
+
+.list-overflow::-webkit-scrollbar {
+    width: 10px;
+}
+
+.list-overflow::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(231, 113, 27,0.3);
+    border-radius: 10px;
+}
+
+.list-overflow::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
 
 .list-top-spacer {

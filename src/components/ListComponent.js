@@ -10,13 +10,12 @@ class ListComponent extends React.Component {
           <button id="toggle-pane"
             onClick={ (e) => this.props.toggleClassName(e)  }>
             ></button>
-          <div className="list-top-spacer"></div>
-            <ul>
+            <div className="list-overflow">
+              <div className="list-top-spacer"></div>
+                  <ListItem listData={this.props.listData}/>
 
-              <ListItem/>
-
-            </ul>
-          <div className="list-bottom-spacer"><img src={PBFS} alt="Powered by Foursquare"/></div>
+              <div className="list-bottom-spacer"><img src={PBFS} alt="Powered by Foursquare"/></div>
+          </div>
         </div>
       </section>
     )
