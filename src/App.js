@@ -18,10 +18,12 @@ class App extends Component {
         meta: [],
         venue_ids: [],
         restaurants: [],
-        query: ''
+        query: '',
+        filterResults: [] // copy of restaurants for filter
       }
       this.handleClickBottomToggler = this.handleClickBottomToggler.bind(this)
       this.handleClickPaneToggler = this.handleClickPaneToggler.bind(this)
+      this.updateQuery = this.updateQuery.bind(this)
 
   }
 
@@ -61,7 +63,8 @@ class App extends Component {
         .then(venueDetails => venueDetails)
         .then(venueDetails =>
           this.setState({
-            restaurants: venueDetails
+            restaurants: venueDetails,
+            filterResults: venueDetails
           })
 
         )
@@ -140,6 +143,31 @@ class App extends Component {
   }
 
 
+
+  // take the user input and set it in our state, then call search to look for restaurants that match our query
+updateQuery = (query) => {
+  this.setState({
+    query: query
+  });
+  this.search(query);
+}
+
+search = (query) => {
+
+  // if the searchBar is empty clear/ed clear the searchResults too
+  if (query === '') {
+    this.setState({
+      filterResults: [...this.state.restaurants]
+    });
+    return;
+  }
+  this.setState({
+    filterResults: [...this.state.restaurants].filter(restaurant => restaurant.name.includes(query))
+  })
+  console.log(this.state.filterResults);
+}
+
+
   render() {
 
 
@@ -148,11 +176,15 @@ class App extends Component {
 
         <main>
 
-          <FilterComponent />
+          <FilterComponent
+            updateQuery={this.updateQuery}
+            query={this.state.query}/>
+
           <ListComponent
             toggleClassName={ this.handleClickPaneToggler }
-            listData={this.state.restaurants}
+            listData={this.state.filterResults}
           />
+
           <BottomListToggle
             toggleClassName={ this.handleClickBottomToggler }
            />

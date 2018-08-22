@@ -4,6 +4,9 @@ import noImage from '../imgs/restaurantImages/noImage.png'
 class ListItem extends React.Component {
   render() {
     const [...restaurants] = this.props.listData
+    // console.log(restaurants.map(restaurant => restaurant.name));
+    // console.log([...restaurants].filter(restaurant => restaurant.name.includes('Stack')))
+
     return (
       <ul>
       {restaurants.map(place => {
