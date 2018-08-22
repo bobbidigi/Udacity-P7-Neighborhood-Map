@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import FilterComponent from './components/FilterComponent'
 import ListComponent from './components/ListComponent'
 import BottomListToggle from './components/BottomListToggle'
+import Map from './components/Map'
 import showMapIcon from './imgs/icons/maps_grey600_24dp.png'
 import showListIcon from './imgs/icons/list_grey600_24dp.png'
 import openListImage from './imgs/icons/open_arrow.png'
@@ -17,9 +18,9 @@ class App extends Component {
         showPane: true,
         meta: [],
         venue_ids: [],
-        restaurants: [],
+        restaurants: [], // api only loads locations once to increase speed and reduce quotas
         query: '',
-        filterResults: [] // copy of restaurants for filter
+        filterResults: [] // copy of restaurants data to filter
       }
       this.handleClickBottomToggler = this.handleClickBottomToggler.bind(this)
       this.handleClickPaneToggler = this.handleClickPaneToggler.bind(this)
@@ -205,9 +206,7 @@ search = (query) => {
             toggleClassName={ this.handleClickBottomToggler }
            />
 
-          <section id="googleMap">
-            <div id="map"></div>
-          </section>
+          <Map />
 
         </main>
 
