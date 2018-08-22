@@ -15,8 +15,10 @@ class App extends Component {
       this.state = {
         showList: true,
         showPane: true,
+        meta: [],
+        venue_ids: [],
         restaurants: [],
-        meta: []
+        query: ''
       }
       this.handleClickBottomToggler = this.handleClickBottomToggler.bind(this)
       this.handleClickPaneToggler = this.handleClickPaneToggler.bind(this)
@@ -26,13 +28,21 @@ class App extends Component {
   componentDidMount() {
 
     FS.getRestaurants()
-    .then(data=> {
-      console.log(data.response.groups[0].items);
+    .then(restaurants=> {
       this.setState({
-        meta: data.meta,
-        restaurants: data.response.groups[0].items
+        meta: restaurants.meta
+      })
+      return restaurants.response.groups[0].items
+    }).then(restaurants => {
+      let ids = []
+      restaurants.map(restaurant => {
+        ids.push(restaurant.venue.id)
+      })
+      this.setState({
+        venue_ids: ids
       })
     })
+    .catch(err => console.log('FS.getRestaurants() Promise: '+ err))
 
 
 
@@ -111,9 +121,10 @@ class App extends Component {
 
         <main>
 
-          <FilterComponent/>
+          <FilterComponent />
           <ListComponent
             toggleClassName={ this.handleClickPaneToggler }
+            listData={this.state.restaurants}
           />
           <BottomListToggle
             toggleClassName={ this.handleClickBottomToggler }
