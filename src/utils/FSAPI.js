@@ -6,6 +6,8 @@ const RADIUS_N_METERS = 40000
 const VERSION = 20180323
 const NUMBER_OF_RESULTS = 2
 
+// 39.0997265,-94.57856670000001 Kansas City, MO coords
+
 export const getRestaurants = () =>
     fetch(`${URL}/explore?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${VERSION}&limit=${NUMBER_OF_RESULTS}&ll=39.0997265,-94.57856670000001&query=barbecue&radius=${RADIUS_N_METERS}`)
         .then(res => res.json())
