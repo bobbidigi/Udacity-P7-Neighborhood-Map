@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Udacity Front End Developer Nanodegree Final Project: Neighborhood Map in React, Pulling from Google API and Foursquare's API",
   "author": "Tony Boswell",
-  "licents": "ISC",
+  "license": "ISC",
   "private": true,
   "dependencies": {
     "react": "^16.4.2",
