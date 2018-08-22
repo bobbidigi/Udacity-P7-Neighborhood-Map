@@ -58,13 +58,13 @@ html,body {
   width: 37px;
   padding: 10px;
   background-color: #fff0;
-  background-image: url(./imgs/icons/searchicon.png);
+  background-image: url(./imgs/icons/filter.png);
   background-position: center;
   background-repeat: no-repeat;
   border: 0;
 }
 
-.close {
+.clearQuery {
   position: absolute;
   right: 0;
   top: 0;
@@ -84,6 +84,7 @@ html,body {
 #listComponent {
   width: 100%;
 }
+
 
 .hide-list {
   overflow: hidden;
