@@ -6,7 +6,7 @@ class FilterComponent extends React.Component {
     return (
       <section id="filterComponent">
         <div className="filterContainer">
-          <button className="hamburger"></button>
+          <div className="filterIcon"></div>
           <input className="filterText" type="text" placeholder="barbecue restaurants"/>
           <button className="close"></button>
         </div>
