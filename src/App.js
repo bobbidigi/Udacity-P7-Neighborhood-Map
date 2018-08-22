@@ -24,6 +24,7 @@ class App extends Component {
       this.handleClickBottomToggler = this.handleClickBottomToggler.bind(this)
       this.handleClickPaneToggler = this.handleClickPaneToggler.bind(this)
       this.updateQuery = this.updateQuery.bind(this)
+      this.clearQuery = this.clearQuery.bind(this)
 
   }
 
@@ -142,7 +143,13 @@ class App extends Component {
     })
   }
 
-
+  // clear our query and searchResults
+  clearQuery = () => {
+   this.setState({
+     query: '',
+     filterResults: [...this.state.restaurants]
+    })
+  }
 
   // take the user input and set it in our state, then call search to look for restaurants that match our query
 updateQuery = (query) => {
@@ -162,9 +169,11 @@ search = (query) => {
     return;
   }
   this.setState({
-    filterResults: [...this.state.restaurants].filter(restaurant => restaurant.name.includes(query))
+    filterResults: [...this.state.restaurants].filter(restaurant =>
+      // convert the input into lowercase by using toLowerCase() then use indexOf the query converted to lowercase to catch both upper and lower case queries
+      restaurant.name.toLowerCase().indexOf(query.toLowerCase()) > -1)
+
   })
-  console.log(this.state.filterResults);
 }
 
 
@@ -178,7 +187,9 @@ search = (query) => {
 
           <FilterComponent
             updateQuery={this.updateQuery}
-            query={this.state.query}/>
+            query={this.state.query}
+            clearQuery={this.clearQuery}
+          />
 
           <ListComponent
             toggleClassName={ this.handleClickPaneToggler }
