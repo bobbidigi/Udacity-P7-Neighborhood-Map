@@ -13,7 +13,8 @@ class ListItem extends React.Component {
         return (
           <li
             className="restaurant-list-item"
-            key={place.id}>
+            key={place.id}
+            tabIndex='0'>
 
             <img
               aria-hidden="true"
