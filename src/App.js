@@ -33,17 +33,44 @@ class App extends Component {
         meta: restaurants.meta
       })
       return restaurants.response.groups[0].items
-    }).then(restaurants => {
+    })
+    .then(restaurants => {
+
       let ids = []
-      restaurants.map(restaurant => {
+
+      restaurants.map(restaurant =>
         ids.push(restaurant.venue.id)
-      })
+      )
+
       this.setState({
         venue_ids: ids
       })
+
+      return ids
+    })
+    .then(ids => {
+
+      let venueDetails = []
+      ids.map(venueID =>
+
+        FS.getRestaurantDetails(venueID)
+        .then(details =>{
+          venueDetails.push(details.response.venue)
+          return venueDetails
+        })
+        .then(venueDetails => venueDetails)
+        .then(venueDetails =>
+          this.setState({
+            restaurants: venueDetails
+          })
+
+        )
+        .catch(err => console.log('FSgetDetails() Promise: '+ err))
+
+        )
+
     })
     .catch(err => console.log('FS.getRestaurants() Promise: '+ err))
-
 
 
     window.addEventListener('resize', () => {
