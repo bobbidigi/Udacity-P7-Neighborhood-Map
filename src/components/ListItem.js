@@ -27,11 +27,15 @@ class ListItem extends React.Component {
 
               <h5 className="list-title">{place.name}</h5>
 
-              <p className="rating">Rating: {place.rating} out of 10<span className="review-count">{place.likes.count} reviews</span></p>
+              <p className="rating">Rating: {place.rating} out of 10<span className="review-count">({place.likes.count} reviews)</span></p>
 
-              <p className="cuisines">Barbecue Restaurant</p>
+              <p className="cuisines">{place.attributes.groups[0].summary} - Barbecue - {place.location.address}</p>
 
-              <p className="address">{place.location.address+', '+ place.location.formattedAddress[1]}</p>
+              <p className="address">
+                {/* {place.location.address+', '+ place.location.formattedAddress[1]} */}
+                {place.tips.groups[0].items[0].text}
+
+              </p>
 
               <p className="hours-status">{place.hours.status}</p>
 
