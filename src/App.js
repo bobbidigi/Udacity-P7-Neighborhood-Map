@@ -177,7 +177,9 @@ search = (query) => {
   this.setState({
     filterResults: [...this.state.allRestaurants].filter(restaurant =>
       // convert the input into lowercase by using toLowerCase() then use indexOf the query converted to lowercase to catch both upper and lower case queries
-      restaurant.name.toLowerCase().indexOf(query.toLowerCase()) > -1)
+      // restaurant.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+      new RegExp(query,'i').exec(restaurant.name)
+    )
 
   })
 }
