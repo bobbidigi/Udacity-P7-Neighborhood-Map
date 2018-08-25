@@ -16,6 +16,12 @@
 .env.test.local
 .env.production.local
 sample_details.json
+Q39.json
+arthur.json
+jackstack.json
+joes.json
+slaps.json
+db - Copy.json
 
 npm-debug.log*
 yarn-debug.log*
