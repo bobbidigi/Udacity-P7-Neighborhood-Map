@@ -248,7 +248,7 @@ class App extends Component {
       <header
         className='header'
         role="banner"
-        >
+      >
         <h2 className='header-title'>Kansas City Barbecue</h2>
       </header>
       <main>
