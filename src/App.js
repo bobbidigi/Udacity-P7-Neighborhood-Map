@@ -1,219 +1,297 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import FilterComponent from './components/FilterComponent'
 import ListComponent from './components/ListComponent'
 import BottomListToggle from './components/BottomListToggle'
-import Map from './components/Map'
-import showMapIcon from './imgs/icons/maps_grey600_24dp.png'
-import showListIcon from './imgs/icons/list_grey600_24dp.png'
-import openListImage from './imgs/icons/open_arrow.png'
-import closeListImage from './imgs/icons/close_arrow.png'
+import MapContainer from './components/MapContainer'
+// eslint-disable-next-line
 import * as FS from './utils/FSAPI'
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props)
-      this.state = {
-        showList: true,
-        showPane: true,
-        meta: [],
-        venue_ids: [],
-        allRestaurants: [], // api only loads locations once to increase speed and reduce quotas
-        query: '',
-        filterResults: [] // copy of restaurants data to filter
-      }
-      this.handleClickBottomToggler = this.handleClickBottomToggler.bind(this)
-      this.handleClickPaneToggler = this.handleClickPaneToggler.bind(this)
-      this.updateQuery = this.updateQuery.bind(this)
-      this.clearQuery = this.clearQuery.bind(this)
+    this.state = {
+      isListOpen: true,
+      isPanelOpen: true,
+      wasLIClicked: false,
+      meta: [],
+      bounds: [],
+      venue_ids: [],
+      allRestaurants: [], // api only loads locations once to increase speed and reduce quotas
+      query: '',
+      filterResults: [], // copy of restaurants data to filter
+      userSelectedLI: '',
+      onMobile: false,
+      isMarkerActive: false
+    }
+    this.toggleMobileListView = this
+      .toggleMobileListView
+      .bind(this)
+    this.toggleListPanel = this
+      .toggleListPanel
+      .bind(this)
+    this.updateQuery = this
+      .updateQuery
+      .bind(this)
+    this.clearQuery = this
+      .clearQuery
+      .bind(this)
+    this.getListId = this.getListId.bind(this)
+    this.wasMarkerClicked = this.wasMarkerClicked.bind(this)
 
+  }
+
+  componentWillMount() {
+
+    window.addEventListener('resize', () => {
+      if (window.matchMedia('(min-width: 750px)').matches) {
+        console.log('Screen width is at least 750px');
+        this.setState({
+          onMobile: false,
+          isListOpen: true,
+          isPanelOpen: true,
+          userSelectedLI: ''
+        })
+
+      } else {
+        console.log('Screen less than 750px');
+        this.setState({
+          onMobile: true,
+          isListOpen: true,
+          isPanelOpen: true,
+          userSelectedLI: ''
+        })
+      }
+
+    });
   }
 
   componentDidMount() {
 
-    FS.getRestaurants()
-    .then(restaurants=> {
-      this.setState({
-        meta: restaurants.meta
-      })
-      return restaurants.response.groups[0].items
-    })
-    .then(restaurants => {
+    this.setState({venue_ids: []})
 
-      let ids = []
+    //@@ Set up fetch for back-end server to process request for development
+    //@@ So that I don't keep hitting the wall of reaching my quota limits
+    //@@ every day while testing Marker animations
+    //@@ to run this server you must have the npm package server-json
+    //@@ installed and have your data in json format inside db.json
+    //## add this line to your package.json file under scripts:
+    //## "proxy": "http://localhost:3001"
+    //## npm install -g json-server
+    //## type in your console json-server --watch db.json --port anyport#
 
-      restaurants.map(restaurant =>
-        ids.push(restaurant.venue.id)
-      )
-
-      this.setState({
-        venue_ids: ids
-      })
-
-      return ids
-    })
-    .then(ids => {
-
-      let venueDetails = []
-      ids.map(venueID =>
-
-        FS.getRestaurantDetails(venueID)
-        .then(details =>{
-          venueDetails.push(details.response.venue)
-          return venueDetails
+    //  mock fetches foursquare explore? request
+    fetch('http://localhost:3001/response')
+      .then(res => res.json())
+      .then(restaurants => {
+        this.setState({
+          meta: restaurants.meta,
+          bounds: [restaurants.response.suggestedBounds.sw, restaurants.response.suggestedBounds.ne]
         })
-        .then(venueDetails => venueDetails)
-        .then(venueDetails =>
-          this.setState({
-            allRestaurants: venueDetails,
-            filterResults: venueDetails
-          })
-
-        )
-        .catch(err => console.log('FSgetDetails() Promise: '+ err))
-
-        )
-
-    })
-    .catch(err => console.log('FS.getRestaurants() Promise: '+ err))
-
-
-    window.addEventListener('resize', () => {
-
-      let list = document.getElementById('listbox')
-
-      if (window.matchMedia('(min-width: 750px)').matches) {
-          console.log('Screen width is at least 750px');
-          if (list.classList.contains('hide-list')) {
-            list.classList.toggle('hide-list');
-            list.classList.toggle('show-pane');
-          }
-      } else {
-          console.log('Screen less than 750px');
-          if (list.classList.contains('hide-pane')) {
-            list.classList.toggle('hide-pane');
-            list.classList.toggle('show-list');
-            document.getElementById('list-toggle').innerHTML = 'show map'
-          } else {
-            list.classList.toggle('show-pane');
-            list.classList.toggle('show-list');
-            document.getElementById('list-toggle').innerHTML = 'show map'
-          }
-      }
-      this.setState({
-        showList: true,
-        showPane: true
+        return restaurants
+          .response
+          .groups[0]
+          .items
       })
-    });
+      .then(restaurants => {
 
-  }
+        let ids = []
 
+        restaurants.map(restaurant => ids.push(restaurant.venue.id))
 
+        this.setState({venue_ids: ids})
 
-  handleClickBottomToggler(e) {
-    let list = document.getElementById('listbox')
-    if (this.state.showList) {
-      list.className= 'listbox hide-list'
-      e.target.style.backgroundImage= 'url('+showListIcon+')'
-      e.target.innerHTML = 'show list'
-    } else {
-      list.className= 'listbox show-list'
-      e.target.style.backgroundImage= 'url('+showMapIcon+')'
-      e.target.innerHTML = 'show map'
+        return ids
+      })
+      .then(ids => {
+
+        let venueDetails = []
+        ids.map(venueID =>
+        // mock fetches foursquare venue details request
+        fetch(`http://localhost:3001/${venueID}`)
+          .then(response => response.json())
+          .then(details => details)
+          .then(details => {
+            venueDetails.push(details.response.venue)
+            return venueDetails
+          })
+          // .then(venueDetails => venueDetails)
+          .then(venueDetails => this.setState({allRestaurants: venueDetails, filterResults: venueDetails}))
+          .catch(err => console.log('FSgetDetails() Promise: ' + err)))
+
+      })
+      .catch(err => console.log('FS.getRestaurants() Promise: ' + err))
+
+      // FS.getRestaurants()
+      // .then(restaurants=> {
+      //   this.setState({
+      //     meta: restaurants.meta,
+      //     bounds: [restaurants.response.suggestedBounds.sw, restaurants.response.suggestedBounds.ne]
+      //   })
+      //   return restaurants.response.groups[0].items
+      // })
+      // .then(restaurants => {
+      //
+      //   let ids = []
+      //
+      //   restaurants.map(restaurant =>
+      //     ids.push(restaurant.venue.id)
+      //   )
+      //
+      //   this.setState({
+      //     venue_ids: ids
+      //   })
+      //
+      //   return ids
+      // })
+      // .then(ids => {
+      //
+      //   let venueDetails = []
+      //   ids.map(venueID =>
+      //
+      //     FS.getRestaurantDetails(venueID)
+      //     .then(details =>{
+      //       venueDetails.push(details.response.venue)
+      //       return venueDetails
+      //     })
+      //     .then(venueDetails => venueDetails)
+      //     .then(venueDetails =>
+      //       this.setState({
+      //         allRestaurants: venueDetails,
+      //         filterResults: venueDetails
+      //       })
+      //
+      //     )
+      //     .catch(err => console.log('FSgetDetails() Promise: '+ err))
+      //
+      //     )
+      //
+      // })
+      // .catch(err => console.log('FS.getRestaurants() Promise: '+ err))
+
     }
+
+
+// isListOpen = true
+  toggleMobileListView(e) {
     this.setState({
-      showList: !this.state.showList
+      isListOpen: !this.state.isListOpen
     })
-
   }
 
-  handleClickPaneToggler(e) {
-    let list = document.getElementById('listbox')
-    let pane = document.getElementById('toggle-pane')
-    if (this.state.showPane && list) {
-      list.className= 'listbox hide-pane'
-      e.target.style.backgroundImage= 'url('+openListImage+')';
-      e.target.setAttribute('alt', 'open pane')
-      pane.setAttribute('aria-label', 'Expand side panel')
-      pane.setAttribute('alt', 'Expand side panel')
-    } else {
-      list.className= 'listbox show-pane'
-      e.target.style.backgroundImage= 'url('+closeListImage+')';
-      e.target.setAttribute('alt', 'close pane')
-      pane.setAttribute('aria-label', 'Close side panel')
-      pane.setAttribute('alt', 'Close side panel')
-    }
-
+// isPanelOpen
+  toggleListPanel(e) {
     this.setState({
-      showPane: !this.state.showPane
+      isPanelOpen: !this.state.isPanelOpen
     })
   }
 
   // clear our query and searchResults
   clearQuery = () => {
-   this.setState({
-     query: '',
-     filterResults: [...this.state.allRestaurants]
+    // if the query is empty we don't want the map to rerender if we click the button
+    if (this.state.query === '')
+      return
+
+    this.setState({
+      query: '',
+      filterResults: [...this.state.allRestaurants]
     })
   }
 
   // take the user input and set it in our state, then call search to look for restaurants that match our query
-updateQuery = (query) => {
-  this.setState({
-    query: query
-  });
-  this.search(query);
-}
-
-search = (query) => {
-
-  // if the searchBar is empty clear/ed clear the searchResults too
-  if (query === '') {
-    this.setState({
-      filterResults: [...this.state.allRestaurants]
-    });
-    return;
+  updateQuery = (query) => {
+    this.setState({query: query});
+    this.search(query);
   }
-  this.setState({
-    filterResults: [...this.state.allRestaurants].filter(restaurant =>
-      // convert the input into lowercase by using toLowerCase() then use indexOf the query converted to lowercase to catch both upper and lower case queries
-      // restaurant.name.toLowerCase().indexOf(query.toLowerCase()) > -1
-      new RegExp(query,'i').exec(restaurant.name)
-    )
 
-  })
-}
+  search = (query) => {
+
+    // if the searchBar is empty clear/ed clear the searchResults too
+    if (query === '') {
+      this.setState({
+        filterResults: [...this.state.allRestaurants]
+      });
+      return;
+    }
+    this.setState({
+      filterResults: [...this.state.allRestaurants].filter(restaurant =>
+      new RegExp(query, 'i').exec(restaurant.name))
+    })
+  }
+
+  getListId = (id, isMarkerActive) => {
+    if (this.state.userSelectedLI === id && this.state.wasLIClicked && this.state.userSelectedLI !== '') {
+      this.setState({
+        wasLIClicked: false,
+        userSelectedLI: '',
+      })
+      return
+    }
+    this.setState({
+      wasLIClicked: true,
+      userSelectedLI: id,
+      // iwInfo: this.state.filterResults.filter(item => item.id === id)
+    })
+  }
+
+  wasMarkerClicked = (isMarkerActive) => {
+      this.setState({
+        isMarkerActive: !isMarkerActive
+      })
+  }
 
 
   render() {
 
+    return (<div className='App'>
 
-    return (
-      <div className="App">
-
-        <main>
-
+      <header
+        className='header'
+        role="banner"
+        >
+        <h2 className='header-title'>Kansas City Barbecue</h2>
+      </header>
+      <main>
+        <section>
           <FilterComponent
             updateQuery={this.updateQuery}
             query={this.state.query}
             clearQuery={this.clearQuery}
+            role="region"
+            aria-label="filter restaurants by name"
           />
-
           <ListComponent
-            toggleClassName={ this.handleClickPaneToggler }
+            toggleClassName={this.toggleListPanel}
             listData={this.state.filterResults}
+            getListId={this.getListId}
+            onMobile={this.state.onMobile}
+            isPanelOpen={this.state.isPanelOpen}
+            isListOpen={this.state.isListOpen}
+            wasLIClicked={this.state.wasLIClicked}
+            isMarkerActive={this.state.isMarkerActive}
           />
+          <BottomListToggle toggleClassName={this.toggleMobileListView}
+            isListOpen={this.state.isListOpen}
+          />
+        </section>
 
-          <BottomListToggle
-            toggleClassName={ this.handleClickBottomToggler }
-           />
+        <section id='googleMap'>
+          <MapContainer
+            role="application"
+            aria-label="Google Map"
+            bounds={this.state.bounds}
+            points={this.state.filterResults}
+            userSelectedLI={this.state.userSelectedLI}
+            isPanelOpen={this.state.isPanelOpen}
+            onMobile={this.state.onMobile}
+            getListId={this.getListId}
+            wasMarkerClicked={this.wasMarkerClicked}
+          />
+        </section>
+      </main>
+      <footer className='footer'></footer>
 
-          <Map />
-
-        </main>
-
-      </div>
-    );
+    </div>);
   }
 }
 

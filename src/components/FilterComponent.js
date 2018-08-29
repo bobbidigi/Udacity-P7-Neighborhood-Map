@@ -17,8 +17,14 @@ class FilterComponent extends React.Component {
             type="text"
             placeholder="enter text to filter results"
             onChange={this.handleChange.bind(this)}
+            tabIndex='0'
+            aria-label='filter restaurants by name'
           />
-          <button className="clearQuery" onClick={()=> this.props.clearQuery()}></button>
+          <button
+            className="clearQuery"
+            onClick={()=> this.props.clearQuery()}
+            aria-label="clear query"
+          ></button>
         </div>
       </section>
     );

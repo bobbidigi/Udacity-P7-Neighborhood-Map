@@ -8,9 +8,12 @@ class BottomListToggle extends React.Component {
           <div className="toggle-list">
             <div className="button-wrapper">
               <button id="list-toggle"
-                className='list-toggle'
-                onClick={(e) => this.props.toggleClassName(e) }>
-                show map
+                className={ this.props.isListOpen? 'open-map': 'open-list'}
+                onClick={(e) => this.props.toggleClassName(e) }
+                aria-label={this.props.isListOpen? 'Showing List': 'Showing Map'}
+                aria-expanded={this.props.isListOpen? 'true' : 'false'}
+              >
+                {this.props.isListOpen? 'show map' : 'show list'}
               </button>
             </div>
           </div>
