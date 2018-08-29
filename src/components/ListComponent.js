@@ -2,6 +2,7 @@ import React from 'react';
 import PBFS from '../imgs/Powered-by-Foursquare-black-300.png';
 import ListItem from './ListItem'
 
+
 class ListComponent extends React.Component {
   render() {
     return (
@@ -23,7 +24,8 @@ class ListComponent extends React.Component {
               getListId={this.props.getListId}
               onMobile={this.props.onMobile}
               isMarkerActive={this.props.isMarkerActive}
-                  />
+            />
+
 
               <div className="list-bottom-spacer">
                 <img

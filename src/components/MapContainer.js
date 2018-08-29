@@ -19,7 +19,8 @@ export class MapContainer extends Component {
         scaledSize: new this.props.google.maps.Size(27, 43), // scaled size
         },
         mouseOver: false,
-        clickedMarkerDetails: []
+        clickedMarkerDetails: [],
+        isOnMobile: true
       }
       this.onMarkerClick = this.onMarkerClick.bind(this)
       this.onMapClicked = this.onMapClicked.bind(this)
@@ -181,25 +182,25 @@ export class MapContainer extends Component {
           mapTypeControl={false}
           onClick={this.onMapClicked}
         >
-            {locations.map(cur =>
-                  <Marker
-                    key={cur.id}
-                    title={cur.name}
-                    address={cur.location.address}
-                    position={{lat: cur.location.lat, lng: cur.location.lng}}
-                    onClick={(props, marker, e) => this.onMarkerClick(props, marker, e)}
-                    id={cur.id}
-                    options={{gestureHandling: 'none'}}
-                    animation={!this.state.hasDropped? this.props.google.maps.Animation.DROP : this.animateMarker(cur)}
-                    onMouseover={ (props, marker, e) => this.handleMouseOver(props, marker, e)}
-                    onMouseout={(props,marker,e) => this.handleMouseExit(props, marker, e)}
-                    icon={this.props.userSelectedLI === cur.id ? LIMarker : this.state.clickedMarkerID === cur.id ? LIMarker : this.state.selectedPlace.id === cur.id? this.state.highlightMarkerIcon : undefined}
-                  />
-                )}
-                <InfoWindow
-                    className='infoWindow'
-                    marker={this.state.activeMarker}
-                    visible={this.state.isInfoWindowOpen}
+          {locations.map(cur =>
+            <Marker
+              key={cur.id}
+              title={cur.name}
+              address={cur.location.address}
+              position={{lat: cur.location.lat, lng: cur.location.lng}}
+              onClick={(props, marker, e) => this.onMarkerClick(props, marker, e)}
+              id={cur.id}
+              options={{gestureHandling: 'none'}}
+              animation={!this.state.hasDropped? this.props.google.maps.Animation.DROP : this.animateMarker(cur)}
+              onMouseover={ (props, marker, e) => this.handleMouseOver(props, marker, e)}
+              onMouseout={(props,marker,e) => this.handleMouseExit(props, marker, e)}
+              icon={this.props.userSelectedLI === cur.id ? LIMarker : this.state.clickedMarkerID === cur.id ? LIMarker : this.state.selectedPlace.id === cur.id? this.state.highlightMarkerIcon : undefined}
+            />
+          )}
+          <InfoWindow
+            className='infoWindow'
+            marker={this.state.activeMarker}
+            visible={this.state.isInfoWindowOpen}
                     maxWidth={150}
                     style={{position: 'absolute', width: '165px'}}
                     onClose={(props, marker, e) => this.onInfoWindowClose(props, marker, e)}
