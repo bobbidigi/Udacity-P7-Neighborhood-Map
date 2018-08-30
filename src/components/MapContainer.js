@@ -8,19 +8,19 @@ export class MapContainer extends Component {
   constructor(props) {
     super(props);
       this.state = {
-        isInfoWindowOpen: false,
-        hasDropped: false,
-        bounds: {},
-        activeMarker: {},
-        selectedPlace: {},
-        clickedMarkerID: '',
+        isInfoWindowOpen: false, // default infoWindow state closed
+        hasDropped: false, // default state is false until app loads and marker drops once
+        bounds: {}, // map bounds received from App.js state // fetches
+        activeMarker: {}, // marker object that is hovered // clicked
+        selectedPlace: {}, // marker object that is clicked
+        clickedMarkerID: '', // id of marker that is clicked
         highlightMarkerIcon: {
-        url: highlightMarkerIcon, //'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|0091ff|60|_|%E2%80%A2'
+        url: highlightMarkerIcon,
         scaledSize: new this.props.google.maps.Size(27, 43), // scaled size
         },
-        mouseOver: false,
-        clickedMarkerDetails: [],
-        isOnMobile: true
+        mouseOver: false, // default false unless marker is hovered
+        clickedMarkerDetails: [], // fetch details for clicked marker
+        isOnMobile: true // comminucates user's current view
       }
       this.onMarkerClick = this.onMarkerClick.bind(this)
       this.onMapClicked = this.onMapClicked.bind(this)
@@ -31,12 +31,14 @@ export class MapContainer extends Component {
   };
 
   componentWillMount() {
+    // get the map bound from App.js and set the google map bounds
     let mapBounds = new this.props.google.maps.LatLngBounds(...this.props.bounds);
       this.setState({ bounds: mapBounds})
 
   }
 
   componentDidMount() {
+    // after map load, comminucate animation has dropped complete so markers don't keep dropping
     setTimeout(() => {
       this.setState({
         hasDropped: true
@@ -45,9 +47,13 @@ export class MapContainer extends Component {
     }, 1000)
   }
 
+  // if a marker is clicked we want it to have a different color than it's hover state and an info window to open/close
   onMarkerClick= (props, marker, e) => {
+    // if a marker is clicked on, and then another is hovered over - but not yet clicked on - an infoWindow is open still open, so we need to give the new infoWindow the details of the correct restaurant
     if (this.state.mouseOver) {
+      // filter which restaurant from the "points" on our map
       let details = this.props.points.filter(point => point.id === marker.id)
+      // set state to reflect the current selected marker and info
       this.setState({
         selectedPlace: props,
         activeMarker: marker,
@@ -56,6 +62,7 @@ export class MapContainer extends Component {
         clickedMarkerDetails: details,
       })
     }
+    // if we are on mobile, there is no mouseOver/hover state, we need to do the same as above but only for a clicked item
     if (this.props.onMobile) {
       let details = this.props.points.filter(point => point.id === marker.id)
       this.setState({
@@ -66,12 +73,21 @@ export class MapContainer extends Component {
         clickedMarkerDetails: details
       })
     }
-    // Object.keys(someObject) will ALWAYS return false with ===, use ==
-    // eslint-disable-next-line
-    let isMarkerActive = (Object.keys(this.state.activeMarker) == 0)
-    this.props.wasMarkerClicked(isMarkerActive)
+    // returns results to parent component, App.js
+    this.checkforActiveMarker()
   };
 
+  checkforActiveMarker = () => {
+    // Object.keys(someObject) will ALWAYS return false with ===, use ==
+    // if there is an active marker there will be a key in the object, state will be false
+    // return this to our parent component App.js
+    // eslint-disable-next-line
+    let isMarkerActive = (Object.keys(this.state.activeMarker) == 0)
+    // return the state to its parent, app.js
+    this.props.wasMarkerClicked(isMarkerActive)
+  }
+
+  // set state on hover for correct marker color
   handleMouseOver = (props, marker, e) => {
     if (!this.state.mouseOver) {
       this.setState({
@@ -86,25 +102,27 @@ export class MapContainer extends Component {
 
   };
 
+  // when the mouse leaves the marker
   handleMouseExit = (props, marker, e) => {
+    // if an infoWindow is not open, the marker may have been clicked but is no longer active set it's state
     if (this.state.isInfoWindowOpen) {
       this.setState({
-        // isInfoWindowOpen: !this.state.isInfoWindowOpen,
         clickedMarkerID: '',
         mouseOver: false
       })
       return
     }
-
+    // return the marker to it's original state
       this.setState({
         selectedPlace: {},
         activeMarker: {},
         mouseOver: false,
         clickedMarkerID: ''
-
       });
   };
 
+  // determines the marker's animation
+  // typeof cur, props, marker, e = object
   animateMarker = (cur, props, marker, e) => {
     if (this.props.userSelectedLI === cur.id)
       return 1 // bounce
@@ -122,8 +140,9 @@ export class MapContainer extends Component {
   }
 
 
-
+  // if the map was clicked we need to return it to it's original state
   onMapClicked = (props) => {
+    // if an info window is open
     if (this.state.isInfoWindowOpen) {
       this.setState({
         isInfoWindowOpen: false,
@@ -132,6 +151,7 @@ export class MapContainer extends Component {
         clickedMarkerID: ''
       })
     }
+    // if the user is on mobile and there is no mouseExit/mouseOver we need to clear the state
     if (this.props.onMobile) {
       this.setState({
         isInfoWindowOpen: false,
@@ -140,12 +160,11 @@ export class MapContainer extends Component {
         clickedMarkerID: ''
       })
     }
-    // Object.keys(someObject) will ALWAYS return false with ===, use ==
-    // eslint-disable-next-line
-    let isMarkerActive = (Object.keys(this.state.activeMarker) == 0)
-    this.props.wasMarkerClicked(isMarkerActive)
+    // returns results to parent component, App.js
+    this.checkforActiveMarker();
   };
 
+  // when an infoWindow is closed we need to clear the active marker
   onInfoWindowClose = (props, marker, e) => {
     this.setState({
       selectedPlace: {},
@@ -156,13 +175,13 @@ export class MapContainer extends Component {
   }
 
   render() {
-
+    // if our map hasn't completed loaded - tell the user we are loading the map
     if (!this.props.google) {
-        return (<div>Loading Map...</div>);
+        return (<div className='mapStatus'>Google Maps is taking a little longer than usual to load, please stand by...</div>);
     }
-
+    // our fetched restaurant data
     let locations = this.props.points
-
+    // when there is a clickedMarker we need to grab it's venue details
     let details = this.state.clickedMarkerDetails !== 0 ? this.state.clickedMarkerDetails : undefined
 
 
