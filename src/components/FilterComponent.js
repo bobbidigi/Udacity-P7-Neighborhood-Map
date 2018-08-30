@@ -1,9 +1,10 @@
 import React from 'react'
 
 class FilterComponent extends React.Component {
+  // get the user input and send it back to our parent component
   handleChange(e) {
     const query = e.target.value;
-    this.props.updateQuery(query);
+    this.props.filterInput(query);
   }
 
   render() {
@@ -22,7 +23,7 @@ class FilterComponent extends React.Component {
           />
           <button
             className="clearQuery"
-            onClick={()=> this.props.clearQuery()}
+            onClick={()=> this.props.clearFilterInput()}
             aria-label="clear query"
           ></button>
         </div>
