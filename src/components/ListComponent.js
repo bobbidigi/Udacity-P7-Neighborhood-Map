@@ -41,6 +41,7 @@ class ListComponent extends React.Component {
                 title='Powered by Foursquare'
               />
             </div>
+            <p className="connectionStatus">{this.props.isOnline? '': 'You currently appear to be offline. This app is being served cache-first, and designed to function completely offline. Your experience will not be affected in the slightest!'}</p>
 
           </div>
         </aside>

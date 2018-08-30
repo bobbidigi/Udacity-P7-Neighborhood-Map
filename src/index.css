@@ -369,6 +369,14 @@ p.rating {
   /* color: #e853d7 !important; */
 }
 
+.connectionStatus {
+  padding: 1em 2em;
+  color: crimson;
+  font-weight: 500;
+  font-style:oblique;
+  text-align: left;
+}
+
 
 .list-bottom-spacer {
   height: 104px;

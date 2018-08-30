@@ -22,7 +22,8 @@ class App extends Component {
       filterResults: [], // copy of restaurants data to filter and hand out to our list and map
       userSelectedLI: '', // the LI that was clicked on by the user
       onMobile: false, // default desktop view - true if user is viewing on a small screen
-      isMarkerActive: false // is a marker currently highlighted or have animation
+      isMarkerActive: false, // is a marker currently highlighted or have animation
+      isOnline: true // false if connection is lost and app is served from cache
     }
 
     this.toggleMobileListView = this
@@ -93,6 +94,10 @@ class App extends Component {
       }
 
     });
+
+    window.addEventListener('online',  this.updateConnectionStatus);
+    window.addEventListener('offline', this.updateConnectionStatus);
+
   }
 
   componentDidMount() {
@@ -211,6 +216,16 @@ class App extends Component {
 
     }
 
+  updateConnectionStatus = (e) => {
+    e.type === 'offline'?
+      this.setState({
+        isOnline: false,
+      }) :
+      this.setState({
+        isOnline: true
+      })
+  }
+
   // isListOpen = true
   toggleMobileListView(e) {
     this.setState({
@@ -291,7 +306,9 @@ class App extends Component {
       <main>
         <section>
           <FilterComponent filterInput={this.filterInput} query={this.state.query} clearFilterInput={this.clearFilterInput} role="region" aria-label="filter restaurants by name"/>
-          <ListComponent toggleClassName={this.toggleListPanel} listData={this.state.filterResults} getListId={this.getListId} onMobile={this.state.onMobile} isPanelOpen={this.state.isPanelOpen} isListOpen={this.state.isListOpen} wasLIClicked={this.state.wasLIClicked} isMarkerActive={this.state.isMarkerActive} userSelectedLI={this.state.userSelectedLI}/>
+          <ListComponent toggleClassName={this.toggleListPanel} listData={this.state.filterResults} getListId={this.getListId} onMobile={this.state.onMobile} isPanelOpen={this.state.isPanelOpen} isListOpen={this.state.isListOpen} wasLIClicked={this.state.wasLIClicked} isMarkerActive={this.state.isMarkerActive} userSelectedLI={this.state.userSelectedLI}
+            isOnline={this.state.isOnline}
+          />
           <BottomListToggle toggleClassName={this.toggleMobileListView} isListOpen={this.state.isListOpen}/>
         </section>
 
