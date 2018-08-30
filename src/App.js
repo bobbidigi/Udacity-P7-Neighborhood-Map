@@ -94,7 +94,7 @@ class App extends Component {
       }
 
     });
-
+    // monitor connection status
     window.addEventListener('online',  this.updateConnectionStatus);
     window.addEventListener('offline', this.updateConnectionStatus);
 
