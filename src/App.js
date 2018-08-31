@@ -14,7 +14,7 @@ class App extends Component {
       isListOpen: true, // default restaurant list open on mobile view - used in BottomListToggle
       isPanelOpen: true, // is the panel open in tablet and desktop view - ListComponent
       wasLIClicked: false, // if LI in list is clicked, state is true
-      meta: [], // response meta data from all fetches
+      meta: {}, // response meta data from all fetches
       bounds: [], // suggestBounds returned from foursquare used to set google map bounds Object{ne: lat, lng, sw: lat, lng}
       venue_ids: [], // ids of all restaurants returned from our "area" fetch
       allRestaurants: [], // api only loads locations once to increase speed and reduce quotas
@@ -23,7 +23,9 @@ class App extends Component {
       userSelectedLI: '', // the LI that was clicked on by the user
       onMobile: false, // default desktop view - true if user is viewing on a small screen
       isMarkerActive: false, // is a marker currently highlighted or have animation
-      isOnline: true // false if connection is lost and app is served from cache
+      isOnline: true, // false if connection is lost and app is served from cache
+      fetchError: false,
+      errorMsg: ''
     }
 
     this.toggleMobileListView = this
@@ -55,54 +57,32 @@ class App extends Component {
     // check initial screen orientation the user is viewing our app in
     if (window.matchMedia('(min-width: 750px)').matches) {
       console.log('Screen width is at least 750px');
-      this.setState({
-        onMobile: false,
-        isListOpen: true,
-        isPanelOpen: true,
-        userSelectedLI: ''
-      })
+      this.setState({onMobile: false, isListOpen: true, isPanelOpen: true, userSelectedLI: ''})
 
     } else {
       console.log('Screen less than 750px');
-      this.setState({
-        onMobile: true,
-        isListOpen: true,
-        isPanelOpen: true,
-        userSelectedLI: ''
-      })
+      this.setState({onMobile: true, isListOpen: true, isPanelOpen: true, userSelectedLI: ''})
     }
 
     // set an event listener to determine if the user flips screen orientation while viewing our app
     window.addEventListener('resize', () => {
       if (window.matchMedia('(min-width: 750px)').matches) {
         console.log('Screen width is at least 750px');
-        this.setState({
-          onMobile: false,
-          isListOpen: true,
-          isPanelOpen: true,
-          userSelectedLI: ''
-        })
+        this.setState({onMobile: false, isListOpen: true, isPanelOpen: true, userSelectedLI: ''})
 
       } else {
         console.log('Screen less than 750px');
-        this.setState({
-          onMobile: true,
-          isListOpen: true,
-          isPanelOpen: true,
-          userSelectedLI: ''
-        })
+        this.setState({onMobile: true, isListOpen: true, isPanelOpen: true, userSelectedLI: ''})
       }
 
     });
     // monitor connection status
-    window.addEventListener('online',  this.updateConnectionStatus);
+    window.addEventListener('online', this.updateConnectionStatus);
     window.addEventListener('offline', this.updateConnectionStatus);
 
   }
 
   componentDidMount() {
-
-    this.setState({venue_ids: []})
 
     ///////////////////////////////////////////////////////////////////////////
     //@@ Set up back-end server to fetch and process requests for development
@@ -119,12 +99,12 @@ class App extends Component {
     //  mock fetches foursquare explore? request
     fetch('http://localhost:3001/response')
       .then(res => res.json())
-      .then(restaurants => {
+      .then(response => {
         this.setState({
-          meta: restaurants.meta,
-          bounds: [restaurants.response.suggestedBounds.sw, restaurants.response.suggestedBounds.ne]
+          meta: response.meta,
+          bounds: [response.response.suggestedBounds.sw, response.response.suggestedBounds.ne]
         })
-        return restaurants
+        return response
           .response
           .groups[0]
           .items
@@ -145,22 +125,36 @@ class App extends Component {
 
         // we need to get the details for each restaurant that was returned above
         ids.map(venueID =>
-
-        // mock fetches foursquare venue details request
-        fetch(`http://localhost:3001/${venueID}`).then(response => response.json()).then(details => details).then(details => {
-          // push the details into an array to use later
-          venueDetails.push(details.response.venue)
-          return venueDetails
-        })
-        .then(venueDetails =>
-          this.setState({
-            allRestaurants: venueDetails,
-            filterResults: venueDetails
-          }))
-        .catch(err => console.log('FSgetDetails() Promise: ' + err)))
+          // mock fetches foursquare venue details request
+          fetch(`http://localhost:3001/${venueID}`)
+            .then(response => response.json())
+            .then(details => details)
+            .then(details => {
+              // push the details into an array to use later
+              venueDetails.push(details.response.venue)
+              return venueDetails
+            })
+          .then(venueDetails => {
+            console.log(this.state.allRestaurants, this.state.filterResults);
+            if (this.state.meta.code === 200 || this.state.meta.code === 304) {
+              this.setState({allRestaurants: venueDetails, filterResults: venueDetails})
+            }
+          })
+          .catch(err => {
+            this.setState({
+              fetchError: true,
+              errorMsg: 'FSgetDetails() Promise: ' + err
+            })
+          })
+        )
 
       })
-      .catch(err => console.log('FS.getRestaurants() Promise: ' + err))
+      .catch(err => {
+        this.setState({
+          fetchError: true,
+          errorMsg: 'FS.getRestaurants() Promise: ' + err
+        })
+      })
 
       ///////////////////////////////////////////////////////////////////////////
       //@ FS.getRestaurants fetches live data from Foursquare
@@ -217,13 +211,9 @@ class App extends Component {
     }
 
   updateConnectionStatus = (e) => {
-    e.type === 'offline'?
-      this.setState({
-        isOnline: false,
-      }) :
-      this.setState({
-        isOnline: true
-      })
+    e.type === 'offline'
+      ? this.setState({isOnline: false})
+      : this.setState({isOnline: true})
   }
 
   // isListOpen = true
@@ -245,7 +235,7 @@ class App extends Component {
     // if the input is empty we don't want the map to rerender if we click the button
     if (this.state.query === '')
       return
-    // if its not empty, set it back to our original state
+      // if its not empty, set it back to our original state
     this.setState({
       query: '',
       filterResults: [...this.state.allRestaurants]
@@ -284,9 +274,7 @@ class App extends Component {
       this.setState({wasLIClicked: false, userSelectedLI: ''})
       return
     }
-    this.setState({
-      wasLIClicked: true, userSelectedLI: id
-    })
+    this.setState({wasLIClicked: true, userSelectedLI: id})
   }
 
   // was a marker clicked on our map?
@@ -305,15 +293,45 @@ class App extends Component {
       </header>
       <main>
         <section>
-          <FilterComponent filterInput={this.filterInput} query={this.state.query} clearFilterInput={this.clearFilterInput} role="region" aria-label="filter restaurants by name"/>
-          <ListComponent toggleClassName={this.toggleListPanel} listData={this.state.filterResults} getListId={this.getListId} onMobile={this.state.onMobile} isPanelOpen={this.state.isPanelOpen} isListOpen={this.state.isListOpen} wasLIClicked={this.state.wasLIClicked} isMarkerActive={this.state.isMarkerActive} userSelectedLI={this.state.userSelectedLI}
-            isOnline={this.state.isOnline}
+          <FilterComponent
+            filterInput={this.filterInput}
+            query={this.state.query}
+            clearFilterInput={this.clearFilterInput}
+            role="region"
+            aria-label="filter restaurants by name"
           />
-          <BottomListToggle toggleClassName={this.toggleMobileListView} isListOpen={this.state.isListOpen}/>
+
+          <ListComponent
+            toggleClassName={this.toggleListPanel}
+            getListId={this.getListId}
+            filterResults={this.state.filterResults}
+            onMobile={this.state.onMobile}
+            isPanelOpen={this.state.isPanelOpen}
+            isListOpen={this.state.isListOpen}
+            isMarkerActive={this.state.isMarkerActive}
+            userSelectedLI={this.state.userSelectedLI}
+            isOnline={this.state.isOnline}
+            fetchError={this.state.fetchError}
+            errorMsg={this.state.errorMsg}
+          />
+          <BottomListToggle
+            toggleClassName={this.toggleMobileListView}
+            isListOpen={this.state.isListOpen}
+          />
         </section>
 
-        <section id='googleMap'>
-          <MapContainer role="application" aria-label="Google Map" bounds={this.state.bounds} points={this.state.filterResults} userSelectedLI={this.state.userSelectedLI} isPanelOpen={this.state.isPanelOpen} onMobile={this.state.onMobile} getListId={this.getListId} wasMarkerClicked={this.wasMarkerClicked}/>
+        <section id='googleMap'>{this.state.isOnline?
+          <MapContainer role="application"
+            aria-label="Google Map"
+            wasMarkerClicked={this.wasMarkerClicked}
+            getListId={this.getListId}
+            bounds={this.state.bounds}
+            points={this.state.filterResults}
+            userSelectedLI={this.state.userSelectedLI}
+            isPanelOpen={this.state.isPanelOpen}
+            onMobile={this.state.onMobile}
+          />
+        : <div ref='map' className={this.props.isPanelOpen ? 'map mapStatus' : 'map mapStatus fullscreen-map'}>Google Maps requires an internet connection and will not load until your connection is re-established.</div>}
         </section>
       </main>
       <footer className='footer'></footer>

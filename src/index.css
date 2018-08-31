@@ -521,9 +521,17 @@ p.rating {
 }
 
 .mapStatus {
-  position: relative;
-  margin-top: 50%;
-  margin-left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1em 2em;
+  max-width: calc(100vh - 414px)
+}
+
+#googleMap {
+  display: flex;
+  justify-content: center;
+  vertical-align: center;
 }
 
 
@@ -541,6 +549,7 @@ p.rating {
 
   .listbox {
     max-width: 414px;
+    box-shadow: 0 0 8px rgba(0,0,0,.3)
   }
 
 

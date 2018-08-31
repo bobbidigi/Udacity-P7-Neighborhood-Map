@@ -20,7 +20,6 @@ export class MapContainer extends Component {
         },
         mouseOver: false, // default false unless marker is hovered
         clickedMarkerDetails: [], // fetch details for clicked marker
-        isOnMobile: true // comminucates user's current view
       }
       this.onMarkerClick = this.onMarkerClick.bind(this)
       this.onMapClicked = this.onMapClicked.bind(this)
@@ -175,19 +174,18 @@ export class MapContainer extends Component {
   }
 
   render() {
-    // if our map hasn't completed loaded - tell the user we are loading the map
-    if (!this.props.google) {
-        return (<div className='mapStatus'>Google Maps is taking a little longer than usual to load, please stand by...</div>);
-    }
+
     // our fetched restaurant data
-    let locations = this.props.points
+    let { points, userSelectedLI, isPanelOpen } = this.props
+
+
     // when there is a clickedMarker we need to grab it's venue details
     let details = this.state.clickedMarkerDetails !== 0 ? this.state.clickedMarkerDetails : undefined
 
 
     return (
       <section>
-        <Map className={this.props.isPanelOpen ? 'map' : 'map fullscreen-map'}
+        <Map className={isPanelOpen ? 'map' : 'map fullscreen-map'}
           google={this.props.google}
           zoom={11}
           initialCenter={{
@@ -201,7 +199,7 @@ export class MapContainer extends Component {
           mapTypeControl={false}
           onClick={this.onMapClicked}
         >
-          {locations.map(cur =>
+          {points.map(cur =>
             <Marker
               key={cur.id}
               title={cur.name}
@@ -213,7 +211,7 @@ export class MapContainer extends Component {
               animation={!this.state.hasDropped? this.props.google.maps.Animation.DROP : this.animateMarker(cur)}
               onMouseover={ (props, marker, e) => this.handleMouseOver(props, marker, e)}
               onMouseout={(props,marker,e) => this.handleMouseExit(props, marker, e)}
-              icon={this.props.userSelectedLI === cur.id ? LIMarker : this.state.clickedMarkerID === cur.id ? LIMarker : this.state.selectedPlace.id === cur.id? this.state.highlightMarkerIcon : undefined}
+              icon={userSelectedLI === cur.id ? LIMarker : this.state.clickedMarkerID === cur.id ? LIMarker : this.state.selectedPlace.id === cur.id? this.state.highlightMarkerIcon : undefined}
             />
           )}
           <InfoWindow

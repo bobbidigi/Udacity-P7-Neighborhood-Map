@@ -4,22 +4,25 @@ import ListItem from './ListItem'
 
 
 class ListComponent extends React.Component {
+
+
   render() {
+      let {filterResults, onMobile, isPanelOpen, isListOpen, isMarkerActive, userSelectedLI, isOnline, fetchError, errorMsg} = this.props
     return (
       <section id="listComponent">
         <aside
-          className={'listbox '+ (this.props.onMobile? (this.props.isListOpen? 'show-list' : 'hide-list') : (this.props.isPanelOpen ? 'show-panel' : 'hide-panel'))}
+          className={'listbox '+ (onMobile? (isListOpen? 'show-list' : 'hide-list') : (isPanelOpen ? 'show-panel' : 'hide-panel'))}
           id="listbox"
         >
 
           <button
             id="toggle-panel"
-            className={this.props.isPanelOpen ? 'panel-open' : 'panel-closed'}
+            className={isPanelOpen ? 'panel-open' : 'panel-closed'}
             onClick={ (e) => this.props.toggleClassName(e)  }
-            aria-label={this.props.isPanelOpen? 'Collapse side panel': 'Expand side panel'}
-            aria-expanded={this.props.isPanelOpen? 'true' : 'false'}
-            alt={this.props.isPanelOpen? 'Collapse side panel': 'Expand side panel'}
-            title={this.props.isPanelOpen? 'Collapse side panel': 'Expand side panel'}
+            aria-label={isPanelOpen? 'Collapse side panel': 'Expand side panel'}
+            aria-expanded={isPanelOpen? 'true' : 'false'}
+            alt={isPanelOpen? 'Collapse side panel': 'Expand side panel'}
+            title={isPanelOpen? 'Collapse side panel': 'Expand side panel'}
           >
           </button>
 
@@ -27,11 +30,11 @@ class ListComponent extends React.Component {
             <div className="list-top-spacer"></div>
 
             <ListItem
-              listData={this.props.listData}
+              filterResults={filterResults}
               getListId={this.props.getListId}
-              onMobile={this.props.onMobile}
-              isMarkerActive={this.props.isMarkerActive}
-              userSelectedLI={this.props.userSelectedLI}
+              onMobile={onMobile}
+              isMarkerActive={isMarkerActive}
+              userSelectedLI={userSelectedLI}
             />
 
             <div className="list-bottom-spacer">
@@ -41,7 +44,8 @@ class ListComponent extends React.Component {
                 title='Powered by Foursquare'
               />
             </div>
-            <p className="connectionStatus">{this.props.isOnline? '': 'No internet connection found. App is running in offline mode.'}</p>
+            <p className="connectionStatus">{isOnline? '': 'No internet connection found. App is running in offline mode.'}</p>
+            <p>{errorMsg}</p>
 
           </div>
         </aside>

@@ -48,17 +48,17 @@ class ListItem extends React.Component {
   }
 
   render() {
-    const [...restaurants] = this.props.listData
+    const { filterResults, onMobile } = this.props
 
     return (<ul
       role="tablist"
       aria-label={'A list of Locations where you can find some of Kansas City\'s finest barbecue'}>
       {
-        restaurants.map(place => {
+        filterResults.map(place => {
           return (
             <li
               role='tab'
-              id={place.id} className={!this.props.onMobile? (this.state.isListItemOpen && this.state.listItem === place.id
+              id={place.id} className={!onMobile? (this.state.isListItemOpen && this.state.listItem === place.id
                 ? 'restaurant-list-item'
                 : 'restaurant-list-item-closed'): 'restaurant-list-item'} key={place.id} tabIndex='0' onClick={this.handleListClick} js-data={place.id} aria-label={`${place.name}`} aria-expanded={this.state.isListItemOpen
                   ? 'true'
@@ -70,7 +70,7 @@ class ListItem extends React.Component {
                   this.state.isListItemOpen
                     ? 'true'
                     : 'false'}
-                className={!this.props.onMobile ? (
+                className={!onMobile ? (
                   this.state.isListItemOpen && this.state.listItem === place.id
                     ? 'list-image'
                     : 'hide-image') : 'list-image'} src={!place.bestPhoto.prefix
@@ -87,7 +87,7 @@ class ListItem extends React.Component {
               >
 
                 <h5
-                  className={!this.props.onMobile?
+                  className={!onMobile?
                     (this.state.isListItemOpen && this.state.listItem === place.id? 'list-title minus': 'list-title plus'): 'list-title'}
                   js-data={place.id}>{place.name}
                 </h5>
