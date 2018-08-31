@@ -1,6 +1,7 @@
 {
   "name": "udacity-p7-neighborhood-map",
   "version": "0.1.0",
+  "homepage": "http://Shylmysten.github.io/Udacity-P7-Neighborhood-Map",
   "description": "Udacity Front End Developer Nanodegree Final Project: Neighborhood Map in React, Pulling from Google API and Foursquare's API",
   "author": "Tony Boswell",
   "license": "ISC",
@@ -15,7 +16,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
-  "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:3001",
+  "devDependencies": {
+    "gh-pages": "^1.2.0"
+  }
 }
