@@ -9,6 +9,8 @@ The project was bootstrapped with [create-react-app](https://github.com/facebook
 
 I tried very hard to mimic the layout, design and functionality that Google Maps utilizes because it is so darn easy for anyone to just pick up and understand how to use. I also chose not to hard code any of my initial data. All location data is retrieved by API requests to Foursquare.
 
+You can take a quick peek at the **live demo** [here](https://shylmysten.github.io/Udacity-P7-Neighborhood-Map/)
+
 ## Specifications
 
 -   Write code required to add a full-screen map to the page using the  [Google Maps API](https://developers.google.com/maps/). For sake of efficiency, the map API should be called only once.
