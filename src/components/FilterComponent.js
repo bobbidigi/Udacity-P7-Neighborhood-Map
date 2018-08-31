@@ -25,6 +25,7 @@ class FilterComponent extends React.Component {
             className="clearQuery"
             onClick={()=> this.props.clearFilterInput()}
             aria-label="clear query"
+            title="clear input text"
           ></button>
         </div>
       </section>

@@ -16,9 +16,15 @@ export const getRestaurants = () =>
 
 export const getRestaurantDetails = (venueID) =>
     fetch(`${URL}/${venueID}?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${VERSION}`)
-        .then(response => response.json())
-        .then(details => details)
-        .catch(err => console.log(err))
+        .then(response => response.json()
+          .then(text => ({
+            json: text,
+            meta: response
+          }))
+        )
+        .then(({ json, meta }) => {
+          return json
+        })
 
 export const search = () =>
     fetch(`${URL}/search?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${VERSION}&ll=39.0997265,-94.57856670000001&query=barbecue&radius=${RADIUS_N_METERS}&intent=browse&limit=20`)

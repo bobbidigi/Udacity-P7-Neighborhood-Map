@@ -37,6 +37,8 @@ export class MapContainer extends Component {
   }
 
   componentDidMount() {
+
+
     // after map load, comminucate animation has dropped complete so markers don't keep dropping
     setTimeout(() => {
       this.setState({
@@ -212,6 +214,7 @@ export class MapContainer extends Component {
               onMouseover={ (props, marker, e) => this.handleMouseOver(props, marker, e)}
               onMouseout={(props,marker,e) => this.handleMouseExit(props, marker, e)}
               icon={userSelectedLI === cur.id ? LIMarker : this.state.clickedMarkerID === cur.id ? LIMarker : this.state.selectedPlace.id === cur.id? this.state.highlightMarkerIcon : undefined}
+
             />
           )}
           <InfoWindow

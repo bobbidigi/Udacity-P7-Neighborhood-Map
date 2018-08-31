@@ -50,6 +50,7 @@ class ListItem extends React.Component {
   render() {
     const { filterResults, onMobile } = this.props
 
+
     return (<ul
       role="tablist"
       aria-label={'A list of Locations where you can find some of Kansas City\'s finest barbecue'}>
@@ -94,11 +95,15 @@ class ListItem extends React.Component {
 
 
                 <p className="rating"
-                  js-data={place.id}>Rating: {place.rating} out of 10
+                  js-data={place.id}>Rating: {place.rating}
+                  out of 10
+
                   <span
                     className="review-count"
-                    js-data={place.id}>({place.likes.count} reviews)
+                    js-data={place.id}>({place.likes.count}
+                    reviews)
                   </span>
+
                 </p>
 
                 <p

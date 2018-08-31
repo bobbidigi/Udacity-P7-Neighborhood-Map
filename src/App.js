@@ -25,7 +25,8 @@ class App extends Component {
       isMarkerActive: false, // is a marker currently highlighted or have animation
       isOnline: true, // false if connection is lost and app is served from cache
       fetchError: false,
-      errorMsg: ''
+      errorMsg: '',
+      googleMapError: true
     }
 
     this.toggleMobileListView = this
@@ -84,6 +85,19 @@ class App extends Component {
 
   componentDidMount() {
 
+    // callback for custom error msg if error in the Google API request
+    window.gm_authFailure = () => {
+
+      let html=  '<div ref=\'map\' class=\'map mapStatus\'>Google Maps has encountered an error loading.</div>'
+
+      let pContainer = document.getElementsByClassName('gm-err-content')[0]
+      pContainer.innerHTML = html
+
+      this.setState({
+       googleMapError: true
+      })
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     //@@ Set up back-end server to fetch and process requests for development
     //@@ So that I don't keep hitting the wall of reaching my quota limits
@@ -97,74 +111,10 @@ class App extends Component {
     ///////////////////////////////////////////////////////////////////////////
 
     //  mock fetches foursquare explore? request
-    // fetch('http://localhost:3001/response')
-    //   .then(res => res.json())
-    //   .then(response => {
-    //     this.setState({
-    //       meta: response.meta,
-    //       bounds: [response.response.suggestedBounds.sw, response.response.suggestedBounds.ne]
-    //     })
-    //     if (this.state.meta.code === 200 || this.state.meta.code === 304) {
-    //       return response
-    //         .response
-    //         .groups[0]
-    //         .items
-    //     }
-    //   })
-    //   .then(restaurants => {
-    //
-    //     let ids = []
-    //
-    //     restaurants.map(restaurant => ids.push(restaurant.venue.id))
-    //
-    //     this.setState({venue_ids: ids})
-    //
-    //     return ids
-    //   })
-    //   .then(ids => {
-    //
-    //     let venueDetails = []
-    //
-    //     // we need to get the details for each restaurant that was returned above
-    //     ids.map(venueID =>
-    //       // mock fetches foursquare venue details request
-    //       fetch(`http://localhost:3001/${venueID}`)
-    //         .then(response => response.json())
-    //         .then(details => details)
-    //         .then(details => {
-    //           // push the details into an array to use later
-    //           venueDetails.push(details.response.venue)
-    //           return venueDetails
-    //         })
-    //       .then(venueDetails => {
-    //         console.log(this.state.allRestaurants, this.state.filterResults);
-    //         if (this.state.meta.code === 200 || this.state.meta.code === 304) {
-    //           this.setState({allRestaurants: venueDetails, filterResults: venueDetails})
-    //         }
-    //       })
-    //       .catch(err => {
-    //         this.setState({
-    //           fetchError: true,
-    //           errorMsg: 'Error in: FSgetDetails() Promise: ' + err +' There is a problem with your internet connection. Please try again when your connection has been re-established.'
-    //         })
-    //       })
-    //     )
-    //
-    //   })
-    //   .catch(err => {
-    //     this.setState({
-    //       fetchError: true,
-    //       errorMsg: 'Error in: FS.getRestaurants() Promise: ' + err +' There is a problem with your internet connection. Please try again when your connection has been re-established.'
-    //     })
-    //   })
 
-      ///////////////////////////////////////////////////////////////////////////
-      //@ FS.getRestaurants fetches live data from Foursquare
-      //@ the suggested bounds returned are stored in state for google map bounds
-      ///////////////////////////////////////////////////////////////////////////
-
-      FS.getRestaurants()
-      .then(response=> {
+    fetch('http://localhost:3001/response')
+      .then(res => res.json())
+      .then(response => {
         this.setState({
           meta: response.meta,
           bounds: [response.response.suggestedBounds.sw, response.response.suggestedBounds.ne]
@@ -180,23 +130,22 @@ class App extends Component {
 
         let ids = []
 
-        restaurants.map(restaurant =>
-          ids.push(restaurant.venue.id)
-        )
+        restaurants.map(restaurant => ids.push(restaurant.venue.id))
 
-        this.setState({
-          venue_ids: ids
-        })
+        this.setState({venue_ids: ids})
 
         return ids
       })
       .then(ids => {
 
         let venueDetails = []
-        ids.map(venueID =>
 
-          // Second request gets us the venue details for each restaurant returned in the first
-          FS.getRestaurantDetails(`${venueID}`)
+        // we need to get the details for each restaurant that was returned above
+        ids.map(venueID =>
+          // mock fetches foursquare venue details request
+          fetch(`http://localhost:3001/${venueID}`)
+            .then(response => response.json())
+            .then(details => details)
             .then(details => {
               // push the details into an array to use later
               venueDetails.push(details.response.venue)
@@ -211,26 +160,106 @@ class App extends Component {
           .catch(err => {
             this.setState({
               fetchError: true,
-              errorMsg: 'Error in: FSgetDetails() Promise: ' + err +'\n There is a problem with your internet connection. Please try again when your connection has been re-established.'
+              errorMsg: 'Error in: FSgetDetails() Promise: ' + err +' There could be a problem with your internet connection. Please try again when your connection has been re-established.'
             })
           })
         )
 
       })
       .catch(err => {
-                    console.log(this.state.allRestaurants, this.state.filterResults);
         this.setState({
           fetchError: true,
-          errorMsg: 'Error in: FS.getRestaurants() Promise: ' + err +'\n There is a problem with your internet connection. Please try again when your connection has been re-established.'
+          errorMsg: 'Error in: FS.getRestaurants() Promise: ' + err +' There could be a problem with your internet connection. Please try again when your connection has been re-established.'
         })
       })
 
-    }
+    //////////////////////////////////////////////////////////////////////////////
+    //@@ Comment OUT THE BLOCK BELOW this, then Uncomment THE BLOCK ABOVE
+    //@@ to use the backend json-server that is included in the build
+    //@@ then type in your console json-server --watch db.json --port anyport#
+    //@@ to begin serving the same data that is fetched from FourSquare
+    //////////////////////////////////////////////////////////////////////////////
+
+      ///////////////////////////////////////////////////////////////////////////
+      //@ FS.getRestaurants fetches live data from Foursquare
+      //@ the suggested bounds returned are stored in state for google map bounds
+      ///////////////////////////////////////////////////////////////////////////
+
+      // FS.getRestaurants()
+      // .then(response=> {
+      //   this.setState({
+      //     meta: response.meta,
+      //     bounds: [response.response.suggestedBounds.sw, response.response.suggestedBounds.ne]
+      //   })
+      //   if (this.state.meta.code === 200 || this.state.meta.code === 304) {
+      //     return response
+      //       .response
+      //       .groups[0]
+      //       .items
+      //   }
+      // })
+      // .then(restaurants => {
+      //
+      //   let ids = []
+      //
+      //   restaurants.map(restaurant =>
+      //     ids.push(restaurant.venue.id)
+      //   )
+      //
+      //   this.setState({
+      //     venue_ids: ids
+      //   })
+      //
+      //   return ids
+      // })
+      // .then(ids => {
+      //
+      //   let venueDetails = []
+      //   ids.map(venueID =>
+      //
+      //     // Second request gets us the venue details for each restaurant returned in the first
+      //     FS.getRestaurantDetails(`${venueID}`)
+      //       .then(details => {
+      //         this.setState({
+      //           meta: details.meta.code,
+      //           fetchError: true,
+      //           errorMsg: details.meta.code+' Error in: FSgetDetails() Promise: ' + details.meta.errorDetail +'\n There could be problem with your internet connection. Please check your connection and try again'
+      //         })
+      //         if (this.state.meta.code === 200 || this.state.meta.code === 304) {
+      //           return details
+      //             .response
+      //             .groups[0]
+      //             .items
+      //         }
+      //         // push the details into an array to use later
+      //         venueDetails.push(details.response.venue)
+      //         return venueDetails
+      //       })
+      //     .then(venueDetails => {
+      //
+      //       if (this.state.meta.code === 200 || this.state.meta.code === 304) {
+      //         this.setState({allRestaurants: venueDetails, filterResults: venueDetails})
+      //       }
+      //     })
+      //     .catch(err => console.log(this.state.meta.code +', '+this.state.meta.errorDetail))
+      //   )
+      //
+      // })
+      // .catch(err => {
+      //   this.setState({
+      //     fetchError: true,
+      //     errorMsg: 'Error in: FS.getRestaurants() Promise: ' + err +'\n There is a problem with your internet connection. Please try again when your connection has been re-established.'
+      //   })
+      // })
+
+    } /// END OF componentDidMount() block
+
+
 
   updateConnectionStatus = (e) => {
     e.type === 'offline'
-      ? this.setState({isOnline: false, fetchError: true})
-      : this.setState({isOnline: true, fetchError: false})
+      ? this.setState({isOnline: false, fetchError: true, googleMapError: true})
+      : this.setState({isOnline: true, fetchError: false, googleMapError: false})
   }
 
   // isListOpen = true
@@ -301,7 +330,9 @@ class App extends Component {
     })
   }
 
+
   render() {
+    console.log(this.state.googleMapError);
 
     return (<div className='App'>
 
@@ -337,7 +368,7 @@ class App extends Component {
           />
         </section>
 
-        <section id='googleMap'>{(this.state.isOnline || !this.state.fetchError)?
+        <section id='googleMap'>{(!this.state.googleMapError|| this.state.isOnline || !this.state.fetchError)?
           <MapContainer role="application"
             aria-label="Google Map"
             wasMarkerClicked={this.wasMarkerClicked}

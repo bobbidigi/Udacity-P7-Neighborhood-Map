@@ -463,7 +463,7 @@ p.rating {
 .map {
   width: calc(100vw - 414px) !important;
   height: calc(100vh - 106px) !important;
-  margin: 56px 0 45px 0;
+  margin: 0 0 45px 0;
   position: absolute;
   right: 0;
   transition: all 0.3s ease;
@@ -523,9 +523,18 @@ p.rating {
 .mapStatus {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 1em 2em;
-  max-width: calc(100vh - 414px)
+  justify-content: space-around;
+  padding: 2em 4em;
+  max-width: calc(89vw - 414px);
+  font-weight: 500;
+}
+
+.authFailure {
+  display: flex;
+  justify-content: space-around;
+  padding: 2em 4em;
+  max-width: calc(89vw - 414px);
+  font-weight: 500;
 }
 
 #googleMap {
@@ -534,11 +543,13 @@ p.rating {
   vertical-align: middle;
   height: 100vh;
   width: 100vw;
+  padding-top: 56px;
 }
 
 .errorMessage {
   padding: 1em 2em;
   text-align: left;
+  font-weight: 500;
 }
 
 @media screen and (min-width: 750px) {
