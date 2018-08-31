@@ -37,7 +37,7 @@ html,body {
   width: calc(100vw);
   height: 49px;
   display: inline-block;
-  background-image: url(./imgs/restaurantImages/home_img.png);
+  background-image: url(./imgs/restaurantImages/home_img.jpg);
   background-repeat: no-repeat;
   background-position: bottom left;
   background-size:cover;
