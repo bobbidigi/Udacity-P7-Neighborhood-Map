@@ -97,45 +97,112 @@ class App extends Component {
     ///////////////////////////////////////////////////////////////////////////
 
     //  mock fetches foursquare explore? request
-    fetch('http://localhost:3001/response')
-      .then(res => res.json())
-      .then(response => {
+    // fetch('http://localhost:3001/response')
+    //   .then(res => res.json())
+    //   .then(response => {
+    //     this.setState({
+    //       meta: response.meta,
+    //       bounds: [response.response.suggestedBounds.sw, response.response.suggestedBounds.ne]
+    //     })
+    //     if (this.state.meta.code === 200 || this.state.meta.code === 304) {
+    //       return response
+    //         .response
+    //         .groups[0]
+    //         .items
+    //     }
+    //   })
+    //   .then(restaurants => {
+    //
+    //     let ids = []
+    //
+    //     restaurants.map(restaurant => ids.push(restaurant.venue.id))
+    //
+    //     this.setState({venue_ids: ids})
+    //
+    //     return ids
+    //   })
+    //   .then(ids => {
+    //
+    //     let venueDetails = []
+    //
+    //     // we need to get the details for each restaurant that was returned above
+    //     ids.map(venueID =>
+    //       // mock fetches foursquare venue details request
+    //       fetch(`http://localhost:3001/${venueID}`)
+    //         .then(response => response.json())
+    //         .then(details => details)
+    //         .then(details => {
+    //           // push the details into an array to use later
+    //           venueDetails.push(details.response.venue)
+    //           return venueDetails
+    //         })
+    //       .then(venueDetails => {
+    //         console.log(this.state.allRestaurants, this.state.filterResults);
+    //         if (this.state.meta.code === 200 || this.state.meta.code === 304) {
+    //           this.setState({allRestaurants: venueDetails, filterResults: venueDetails})
+    //         }
+    //       })
+    //       .catch(err => {
+    //         this.setState({
+    //           fetchError: true,
+    //           errorMsg: 'Error in: FSgetDetails() Promise: ' + err +' There is a problem with your internet connection. Please try again when your connection has been re-established.'
+    //         })
+    //       })
+    //     )
+    //
+    //   })
+    //   .catch(err => {
+    //     this.setState({
+    //       fetchError: true,
+    //       errorMsg: 'Error in: FS.getRestaurants() Promise: ' + err +' There is a problem with your internet connection. Please try again when your connection has been re-established.'
+    //     })
+    //   })
+
+      ///////////////////////////////////////////////////////////////////////////
+      //@ FS.getRestaurants fetches live data from Foursquare
+      //@ the suggested bounds returned are stored in state for google map bounds
+      ///////////////////////////////////////////////////////////////////////////
+
+      FS.getRestaurants()
+      .then(response=> {
         this.setState({
           meta: response.meta,
           bounds: [response.response.suggestedBounds.sw, response.response.suggestedBounds.ne]
         })
-        return response
-          .response
-          .groups[0]
-          .items
+        if (this.state.meta.code === 200 || this.state.meta.code === 304) {
+          return response
+            .response
+            .groups[0]
+            .items
+        }
       })
       .then(restaurants => {
 
         let ids = []
 
-        restaurants.map(restaurant => ids.push(restaurant.venue.id))
+        restaurants.map(restaurant =>
+          ids.push(restaurant.venue.id)
+        )
 
-        this.setState({venue_ids: ids})
+        this.setState({
+          venue_ids: ids
+        })
 
         return ids
       })
       .then(ids => {
 
         let venueDetails = []
-
-        // we need to get the details for each restaurant that was returned above
         ids.map(venueID =>
-          // mock fetches foursquare venue details request
-          fetch(`http://localhost:3001/${venueID}`)
-            .then(response => response.json())
-            .then(details => details)
+
+          FS.getRestaurantDetails(`${venueID}`)
             .then(details => {
               // push the details into an array to use later
               venueDetails.push(details.response.venue)
               return venueDetails
             })
           .then(venueDetails => {
-            console.log(this.state.allRestaurants, this.state.filterResults);
+
             if (this.state.meta.code === 200 || this.state.meta.code === 304) {
               this.setState({allRestaurants: venueDetails, filterResults: venueDetails})
             }
@@ -143,77 +210,26 @@ class App extends Component {
           .catch(err => {
             this.setState({
               fetchError: true,
-              errorMsg: 'FSgetDetails() Promise: ' + err
+              errorMsg: 'Error in: FSgetDetails() Promise: ' + err +'\n There is a problem with your internet connection. Please try again when your connection has been re-established.'
             })
           })
         )
 
       })
       .catch(err => {
+                    console.log(this.state.allRestaurants, this.state.filterResults);
         this.setState({
           fetchError: true,
-          errorMsg: 'FS.getRestaurants() Promise: ' + err
+          errorMsg: 'Error in: FS.getRestaurants() Promise: ' + err +'\n There is a problem with your internet connection. Please try again when your connection has been re-established.'
         })
       })
-
-      ///////////////////////////////////////////////////////////////////////////
-      //@ FS.getRestaurants fetches live data from Foursquare
-      //@ the suggested bounds returned are stored in state for google map bounds
-      ///////////////////////////////////////////////////////////////////////////
-
-      // FS.getRestaurants()
-      // .then(restaurants=> {
-      //   this.setState({
-      //     meta: restaurants.meta,
-      //     bounds: [restaurants.response.suggestedBounds.sw, restaurants.response.suggestedBounds.ne]
-      //   })
-      //   return restaurants.response.groups[0].items
-      // })
-      // .then(restaurants => {
-      //
-      //   let ids = []
-      //
-      //   restaurants.map(restaurant =>
-      //     ids.push(restaurant.venue.id)
-      //   )
-      //
-      //   this.setState({
-      //     venue_ids: ids
-      //   })
-      //
-      //   return ids
-      // })
-      // .then(ids => {
-      //
-      //   let venueDetails = []
-      //   ids.map(venueID =>
-      //
-      //     FS.getRestaurantDetails(venueID)
-      //     .then(details =>{
-      //       venueDetails.push(details.response.venue)
-      //       return venueDetails
-      //     })
-      //     .then(venueDetails => venueDetails)
-      //     .then(venueDetails =>
-      //       this.setState({
-      //         allRestaurants: venueDetails,
-      //         filterResults: venueDetails
-      //       })
-      //
-      //     )
-      //     .catch(err => console.log('FSgetDetails() Promise: '+ err))
-      //
-      //     )
-      //
-      // })
-      // .catch(err => console.log('FS.getRestaurants() Promise: '+ err))
 
     }
 
   updateConnectionStatus = (e) => {
     e.type === 'offline'
-      ? this.setState({isOnline: false})
-      : this.setState({isOnline: true})
+      ? this.setState({isOnline: false, fetchError: true})
+      : this.setState({isOnline: true, fetchError: false})
   }
 
   // isListOpen = true
@@ -320,7 +336,7 @@ class App extends Component {
           />
         </section>
 
-        <section id='googleMap'>{this.state.isOnline?
+        <section id='googleMap'>{(this.state.isOnline || !this.state.fetchError)?
           <MapContainer role="application"
             aria-label="Google Map"
             wasMarkerClicked={this.wasMarkerClicked}
@@ -331,7 +347,7 @@ class App extends Component {
             isPanelOpen={this.state.isPanelOpen}
             onMobile={this.state.onMobile}
           />
-        : <div ref='map' className={this.props.isPanelOpen ? 'map mapStatus' : 'map mapStatus fullscreen-map'}>Google Maps requires an internet connection and will not load until your connection is re-established.</div>}
+        : <div ref='map' className={this.props.isPanelOpen ? 'map mapStatus' : 'map mapStatus fullscreen-map'}>Google Maps requires an internet connection and will not load until your connection has been re-established.</div>}
         </section>
       </main>
       <footer className='footer'></footer>

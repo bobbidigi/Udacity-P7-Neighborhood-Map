@@ -531,9 +531,15 @@ p.rating {
 #googleMap {
   display: flex;
   justify-content: center;
-  vertical-align: center;
+  vertical-align: middle;
+  height: 100vh;
+  width: 100vw;
 }
 
+.errorMessage {
+  padding: 1em 2em;
+  text-align: left;
+}
 
 @media screen and (min-width: 750px) {
 

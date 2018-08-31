@@ -45,7 +45,7 @@ class ListComponent extends React.Component {
               />
             </div>
             <p className="connectionStatus">{isOnline? '': 'No internet connection found. App is running in offline mode.'}</p>
-            <p>{errorMsg}</p>
+            <p className="errorMessage">{fetchError? errorMsg: ''}</p>
 
           </div>
         </aside>
