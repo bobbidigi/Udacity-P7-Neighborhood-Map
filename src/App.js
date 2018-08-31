@@ -195,6 +195,7 @@ class App extends Component {
         let venueDetails = []
         ids.map(venueID =>
 
+          // Second request gets us the venue details for each restaurant returned in the first
           FS.getRestaurantDetails(`${venueID}`)
             .then(details => {
               // push the details into an array to use later
