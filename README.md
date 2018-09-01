@@ -65,6 +65,7 @@ In desktop view, the list sits in a panel that opens and closes left to allow a 
 
 ### Mobile View
 ![Mobile View](http://gdurl.com/Xumm)
+
 **Note at the bottom of the screen in Mobile view the button.**
 
 ![Toggle Button to toggle list view and map view in mobile](http://gdurl.com/o8Pe)
