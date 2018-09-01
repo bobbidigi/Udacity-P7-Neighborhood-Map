@@ -316,7 +316,7 @@ ul {
 .list-title {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: normal;
+  white-space: nowrap;
   color: #000a;
   font-size: 15px;
   font-weight: 600;
@@ -329,7 +329,7 @@ ul {
 p.rating {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: normal;
+  white-space: nowrap;
   color: #e7711b;
   padding-top: 3px;
   margin: 0;
@@ -370,6 +370,12 @@ p.rating {
   white-space: nowrap;
   font-style: italic;
   /* color: #e853d7 !important; */
+}
+
+.cuisines {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .connectionStatus {
