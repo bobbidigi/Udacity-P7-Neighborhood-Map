@@ -617,8 +617,25 @@ p.rating {
   .map {
     width: calc(100vw) !important;
     height: calc(100vh - 106px) !important;
-    margin: 56px 0 45px 0;
+    margin: 0 0 45px 0;
     position:static;
+  }
+
+
+  .mapStatus {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 1em 2em;
+    max-width: 100vw;
+    font-weight: 500;
+  }
+
+  .authFailure {
+    display: contents;
+    justify-content: space-around;
+    padding: 1em 2em;
+    font-weight: 500;
   }
 
 }
@@ -628,6 +645,30 @@ p.rating {
 
   .filterText {
     width: 85%;
+  }
+
+  .map {
+    width: calc(100vw) !important;
+    height: calc(100vh - 106px) !important;
+    margin: 0 0 45px 0;
+    position:static;
+  }
+
+  .mapStatus {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 1em 2em;
+    max-width: 100vw;
+    font-weight: 500;
+  }
+
+
+  .authFailure {
+    display: contents;
+    justify-content: space-around;
+    padding: 1em 2em;
+    font-weight: 500;
   }
 
 }
