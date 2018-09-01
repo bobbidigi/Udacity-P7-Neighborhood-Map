@@ -4,7 +4,7 @@
 
 # Project Overview
 
-In this Capstone project for the Udacity Grow with Google Front End Developer Nanodegree, I was tasked to develop a single page application from scratch featuring a map of my favorite neighborhood locations or a neighborhood I would like to visit. I then had to add functionality to this map including highlighted locations, third-party data about those locations and various ways to browse the content.
+In this Capstone project, I was tasked to develop a single page application from scratch featuring a map of my favorite neighborhood locations or a neighborhood I would like to visit. I then had to add functionality to this map including highlighted locations, third-party data about those locations and various ways to browse the content.
 The project was bootstrapped with [create-react-app](https://github.com/facebookincubator/create-react-app) and I chose to utilize the [Google Maps API](https://cloud.google.com/maps-platform/) and [Foursquare API](https://developer.foursquare.com/) to deliver content.
 
 I tried very hard to mimic the layout, design and functionality that Google Maps utilizes because it is so darn easy for anyone to just pick up and understand how to use. I also chose not to hard code any of my initial data. All location data is retrieved by API requests to Foursquare.
@@ -66,10 +66,14 @@ In desktop view, the list sits in a panel that opens and closes left to allow a 
 ### Mobile View
 ![Mobile View](http://gdurl.com/Xumm)
 **Note at the bottom of the screen in Mobile view the button.**
+
 ![Toggle Button to toggle list view and map view in mobile](http://gdurl.com/o8Pe)
+
 When the list is in view, the button says show map, and when the map is in view the button says show list.
+
 ### Markers
 ![Markers](http://gdurl.com/TM8f)
+
 **In Desktop view**, when a marker is clicked on, the marker is magenta. When hovered, the marker is blue and will also bobble then stop.
 
 **In Mobile view**, the markers will turn magenta and continuously bounce when you click on a list item. It allows you to close the list view and see which marker you clicked on.
@@ -81,8 +85,10 @@ When the list is in view, the button says show map, and when the map is in view 
 ## Error Handling
 ### Offline Error Handling
 ![Offline Error Handling](http://gdurl.com/8thN)
+
 ### Handling Fetch Errors
 ![Handling Fetch Errors](http://gdurl.com/Z4eM)
+
 ### Handling Google API Errors
 ![enter image description here](http://gdurl.com/iQZU)
 
@@ -96,6 +102,7 @@ When the list is in view, the button says show map, and when the map is in view 
    `ARIA roles`  are defined.
  - All content-related images include appropriate alternate text that
    clearly describes the content of the image.
+
 ## Service Worker
 CRA comes stock with a service worker. I utilized this service worker in my project to cache images, html and css.  So when available in the browser, the site uses a service worker to cache responses to requests for site assets. Visited pages are rendered when there is no network access.
 
