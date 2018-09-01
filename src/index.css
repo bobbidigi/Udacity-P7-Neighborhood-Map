@@ -327,6 +327,9 @@ ul {
 
 
 p.rating {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
   color: #e7711b;
   padding-top: 3px;
   margin: 0;
