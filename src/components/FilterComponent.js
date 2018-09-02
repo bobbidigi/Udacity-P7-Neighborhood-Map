@@ -7,6 +7,7 @@ class FilterComponent extends React.Component {
     this.props.filterInput(query);
   }
 
+
   render() {
     return (
       <section id="filterComponent">

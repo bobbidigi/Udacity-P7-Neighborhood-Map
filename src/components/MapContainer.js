@@ -221,18 +221,18 @@ export class MapContainer extends Component {
             className='infoWindow'
             marker={this.state.activeMarker}
             visible={this.state.isInfoWindowOpen}
-                    maxWidth={150}
-                    style={{position: 'absolute', width: '165px'}}
-                    onClose={(props, marker, e) => this.onInfoWindowClose(props, marker, e)}
-                    >
-                    <div>
-                      <h5 className='iw-title'>{this.state.selectedPlace.title}</h5>
-                      <p>{details.length !== 0 ? details[0].location.address : undefined}<br/> {details.length !== 0 ? details[0].location.formattedAddress[1] : undefined}</p>
-                      <p>{details.length !== 0? details[0].hours.status : undefined}</p>
-                      <p>{details.length !== 0? details[0].contact.formattedPhone : undefined}</p>
-                      <p><a href={details.length !== 0?  details[0].url: undefined}>Website</a></p>
-                    </div>
-                  </InfoWindow>
+            maxWidth={150}
+            style={{position: 'absolute', width: '165px'}}
+            onClose={(props, marker, e) => this.onInfoWindowClose(props, marker, e)}
+          >
+            <div>
+              <h5 className='iw-title'>{this.state.selectedPlace.title}</h5>
+              <p>{details.length !== 0 ? details[0].location.address : undefined}<br/> {details.length !== 0 ? details[0].location.formattedAddress[1] : undefined}</p>
+              <p>{details.length !== 0? details[0].hours.status : undefined}</p>
+              <p>{details.length !== 0? details[0].contact.formattedPhone : undefined}</p>
+              <p><a href={details.length !== 0?  details[0].url: undefined}>Website</a></p>
+            </div>
+          </InfoWindow>
 
         </Map>
       </section>

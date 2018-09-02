@@ -5,7 +5,6 @@ import ListItem from './ListItem'
 
 class ListComponent extends React.Component {
 
-
   render() {
       let {filterResults, onMobile, isPanelOpen, isListOpen, isMarkerActive, userSelectedLI, isOnline, fetchError, errorMsg} = this.props
     return (

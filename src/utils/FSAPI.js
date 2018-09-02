@@ -13,6 +13,7 @@ export const getRestaurants = () =>
         .then(res => res.json())
         .then(data => data)
 
+
 export const getRestaurantDetails = (venueID) =>
     fetch(`${URL}/${venueID}?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${VERSION}`)
         .then(response => response.json()

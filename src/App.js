@@ -58,7 +58,7 @@ class App extends Component {
     // check initial screen orientation the user is viewing our app in
     if (window.matchMedia('(min-width: 750px)').matches) {
       console.log('Screen width is at least 750px');
-      this.setState({onMobile: false, isListOpen: true, isPanelOpen: true, userSelectedLI: ''})
+      this.setState({onMobile: false, isListOpen: false, isPanelOpen: true, userSelectedLI: ''})
 
     } else {
       console.log('Screen less than 750px');
@@ -80,6 +80,26 @@ class App extends Component {
     // monitor connection status
     window.addEventListener('online', this.updateConnectionStatus);
     window.addEventListener('offline', this.updateConnectionStatus);
+
+    // listen an unhandledrejection error in the window in the case that a firewall is blocking the  google API from going through - the API will return not response/error message so we need to tell the user why their map is not working
+    window.onunhandledrejection = function(e) {
+
+      // make sure the reason for rejection is indeed google maps API
+      if (e.reason.target.src.includes('maps.googleapis.com')) {
+
+        // split the string and keep the first element of the array
+        let strSplit = e.reason.target.src.split('/js')[0]
+
+        // get the google map container's first Child element which will be an anyonymous <div> tag
+        let el = document.getElementById('googleMap').firstElementChild
+
+        // give it our class so that it responsive
+        el.setAttribute('class', 'map mapStatus fullscreen-map')
+
+        // Place the error message inside the div
+        el.innerHTML = 'There was a problem loading the Google Maps API, '+ strSplit +',\n Please insure that your firewall is allowing the API through.'
+      }
+    }
 
   }
 
