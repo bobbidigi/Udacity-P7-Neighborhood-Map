@@ -144,7 +144,7 @@ export class MapContainer extends Component {
   // if the map was clicked we need to return it to it's original state
   onMapClicked = (props) => {
     // if an info window is open
-    if (this.state.isInfoWindowOpen) {
+    if (this.state.isInfoWindowOpen || this.state.clickedMarkerID !== '') {
       this.setState({
         isInfoWindowOpen: false,
         activeMarker: {},
