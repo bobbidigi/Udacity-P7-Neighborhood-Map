@@ -51,7 +51,7 @@ export class MapContainer extends Component {
   // if a marker is clicked we want it to have a different color than it's hover state and an info window to open/close
   onMarkerClick= (props, marker, e) => {
     // if a marker is clicked on, and then another is hovered over - but not yet clicked on - an infoWindow is open still open, so we need to give the new infoWindow the details of the correct restaurant
-    if (this.state.mouseOver) {
+    if (this.state.mouseOver || (!this.props.onMobile && !this.state.mouseOver)) {
       // filter which restaurant from the "points" on our map
       let details = this.props.points.filter(point => point.id === marker.id)
       // set state to reflect the current selected marker and info
@@ -221,18 +221,18 @@ export class MapContainer extends Component {
             className='infoWindow'
             marker={this.state.activeMarker}
             visible={this.state.isInfoWindowOpen}
-            maxWidth={150}
-            style={{position: 'absolute', width: '165px'}}
-            onClose={(props, marker, e) => this.onInfoWindowClose(props, marker, e)}
-          >
-            <div>
-              <h5 className='iw-title'>{this.state.selectedPlace.title}</h5>
-              <p>{details.length !== 0 ? details[0].location.address : undefined}<br/> {details.length !== 0 ? details[0].location.formattedAddress[1] : undefined}</p>
-              <p>{details.length !== 0? details[0].hours.status : undefined}</p>
-              <p>{details.length !== 0? details[0].contact.formattedPhone : undefined}</p>
-              <p><a href={details.length !== 0?  details[0].url: undefined}>Website</a></p>
-            </div>
-          </InfoWindow>
+                    maxWidth={150}
+                    style={{position: 'absolute', width: '165px'}}
+                    onClose={(props, marker, e) => this.onInfoWindowClose(props, marker, e)}
+                    >
+                    <div>
+                      <h5 className='iw-title'>{this.state.selectedPlace.title}</h5>
+                      <p>{details.length !== 0 ? details[0].location.address : undefined}<br/> {details.length !== 0 ? details[0].location.formattedAddress[1] : undefined}</p>
+                      <p>{details.length !== 0? details[0].hours.status : undefined}</p>
+                      <p>{details.length !== 0? details[0].contact.formattedPhone : undefined}</p>
+                      <p><a href={details.length !== 0?  details[0].url: undefined}>Website</a></p>
+                    </div>
+                  </InfoWindow>
 
         </Map>
       </section>
