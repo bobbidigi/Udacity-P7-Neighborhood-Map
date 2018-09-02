@@ -555,6 +555,7 @@ p.rating {
   padding-top: 56px;
 }
 
+
 .errorMessage {
   padding: 1em 2em;
   text-align: left;
@@ -647,10 +648,14 @@ p.rating {
     font-weight: 500;
   }
 
+
+
 }
 
 
 @media screen and (max-width: 320px) {
+
+
 
   .filterText {
     width: 85%;
@@ -679,6 +684,7 @@ p.rating {
     padding: 1em 2em;
     font-weight: 500;
   }
+
 
 
 }
