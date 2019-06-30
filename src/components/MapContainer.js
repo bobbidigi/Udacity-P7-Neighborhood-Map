@@ -190,10 +190,12 @@ export class MapContainer extends Component {
         <Map className={isPanelOpen ? 'map' : 'map fullscreen-map'}
           google={this.props.google}
           zoom={11}
-          initialCenter={{
-            lat: 39.0997265,
-            lng: -94.57856670000001
-          }}
+          location={this.props.location}
+          initialCenter={this.props.location}
+          // initialCenter={{
+          //   lat: 39.0997265,
+          //   lng: -94.57856670000001
+          // }}
           bounds={this.state.bounds}
           disableDoubleClickZoom={true}
           draggable={false}
