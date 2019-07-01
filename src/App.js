@@ -28,8 +28,8 @@ class App extends Component {
       errorMsg: '',
       googleMapError: true,
       location: {
-        lat: null,
-        lng: null
+        lat: 0,
+        lng: 0
       }
     }
 
@@ -122,21 +122,22 @@ class App extends Component {
       }) 
     }
 
+    
+
     //Get user location Lat Lng
     navigator.geolocation.getCurrentPosition(
       (position) => {
         let lat = position.coords.latitude
         let lng = position.coords.longitude
-        console.log("getCurrentPosition Success " + lat + lng)
-        // logs position correctly
+        console.log("getCurrentPosition Success " + lat + lng) // logs position correctly
         this.setState({
           location: {
             lat: lat,
             lng: lng
-          }})
+          }
+        })
       },
       (error) => {
-        this.props.displayError("Error dectecting your location");
         console.error(JSON.stringify(error))
       }, {
         enableHighAccuracy: true,
@@ -144,77 +145,78 @@ class App extends Component {
         maximumAge: 1000
       })
 
-
     ///////////////////////////////////////////
     //Get resteraunt locations for pins on map
+      
 
-    FS.getRestaurants(`${this.state.location.lat}`, `${this.state.location.lng}`)
+    FS.getRestaurants(`${this.state.location.lat}`, `${this.state.location.lng}`)  //will show map with user location
     
-    // FS.getRestaurants(39.0997265, -94.57856670000001)
+      // FS.getRestaurants(42.5130808, -82.88185849999999) will show places near coords
       .then(res => {
-        this.setState({
-          meta: {
-            code: res.meta.code
-          },
-          bounds: [res.response.suggestedBounds.sw, res.response.suggestedBounds.ne]
-        })
-        if (this.state.meta.code === 200 || this.state.meta.code === 304) {
-          return res.response.groups[0].items
-        }
-      }).then(restaurants => {
-
-        let ids = []
-
-        restaurants.map(restaurant =>
-          ids.push(restaurant.venue.id)
-        )
-        this.setState({
-          venue_ids: ids
-        })
-
-        return ids
-      })
-      .then(ids => {
-
-        let venueDetails = []
-        ids.map(venueID =>
-
-          // Second request gets us the venue details for each restaurant returned in the first
-          FS.getRestaurantDetails(`${venueID}`)
-          .then(details => {
-            if (details.meta.code !== 200) {
-              this.setState({
-                meta: details.meta,
-                fetchError: true,
-                errorMsg: details.meta.code + ' Error in: FSgetDetails() Promise: ' + details.meta.errorDetail + '\n There could be problem with your internet connection. Please check your connection and try again'
-              })
-            } else {
-              this.setState({
-                meta: details.meta
-              })
-            }
-            // push the details into an array to use later
-            venueDetails.push(details.response.venue)
-            return venueDetails
+          this.setState({
+            meta: {
+              code: res.meta.code
+            },
+            bounds: [res.response.suggestedBounds.sw, res.response.suggestedBounds.ne]
           })
-          .then(venueDetails => {
-            if (this.state.meta.code === 200 || this.state.meta.code === 304) {
-              this.setState({
-                allRestaurants: venueDetails,
-                filterResults: venueDetails
-              })
-            }
+          if (this.state.meta.code === 200 || this.state.meta.code === 304) {
+            return res.response.groups[0].items
+          }
+        }).then(restaurants => {
+          let ids = []
+          restaurants.map(restaurant =>
+            ids.push(restaurant.venue.id)
+          )
+          this.setState({
+            venue_ids: ids
           })
-          .catch(err => console.log(this.state.meta.code + ', ' + this.state.meta.errorDetail))
-        )
-
-      })
-      .catch(err => {
-        this.setState({
-          fetchError: true,
-          errorMsg: 'Error in: FS.getRestaurants() Promise: ' + err + '\n There is a problem with your internet connection. Please try again when your connection has been re-established.'
+          return ids
         })
-      })
+        .then(ids => {
+
+          let venueDetails = []
+          ids.map(venueID =>
+
+            // Second request gets us the venue details for each restaurant returned in the first
+            FS.getRestaurantDetails(`${venueID}`)
+            .then(details => {
+              if (details.meta.code !== 200) {
+                this.setState({
+                  meta: details.meta,
+                  fetchError: true,
+                  errorMsg: details.meta.code + ' Error in: FSgetDetails() Promise: ' + details.meta.errorDetail + '\n There could be problem with your internet connection. Please check your connection and try again'
+                })
+              } else {
+                this.setState({
+                  meta: details.meta
+                })
+              }
+              // push the details into an array to use later
+              venueDetails.push(details.response.venue)
+              return venueDetails
+            })
+            .then(venueDetails => {
+              if (this.state.meta.code === 200 || this.state.meta.code === 304) {
+                this.setState({
+                  allRestaurants: venueDetails,
+                  filterResults: venueDetails
+                })
+              }
+            })
+            .catch(err => console.log(this.state.meta.code + ', ' + this.state.meta.errorDetail))
+          )
+
+        })
+        .catch(err => {
+          this.setState({
+            fetchError: true,
+            errorMsg: 'Error in: FS.getRestaurants() Promise: ' + err + '\n There is a problem with your internet connection. Please try again when your connection has been re-established.'
+          })
+        })
+    
+
+
+    
 
     ///////////////////////////////////////////////////////////////////////////
     //@@ Set up back-end server to fetch and process requests for development
