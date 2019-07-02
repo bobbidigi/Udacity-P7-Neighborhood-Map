@@ -16,7 +16,7 @@ class FilterComponent extends React.Component {
             value={this.props.query}
             className="filterText"
             type="text"
-            placeholder="enter text to filter results"
+            placeholder={this.props.city}
             onChange={this.handleChange.bind(this)}
             tabIndex='0'
             aria-label='filter restaurants by name'

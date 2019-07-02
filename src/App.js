@@ -6,6 +6,8 @@ import MapContainer from './components/MapContainer'
 // eslint-disable-next-line
 import * as FS from './utils/FSAPI'
 import './App.css';
+import axios from "axios";
+
 
 class App extends Component {
   constructor(props) {
@@ -30,7 +32,9 @@ class App extends Component {
       location: {
         lat: 0,
         lng: 0
-      }
+      },
+      city: "loading",
+      region: "loading"
     }
 
     this.toggleMobileListView = this
@@ -107,6 +111,9 @@ class App extends Component {
     }
 
   }
+
+
+  
 //componentDidMount
   componentDidMount() {
     
@@ -121,37 +128,51 @@ class App extends Component {
        googleMapError: true
       }) 
     }
+//////////////GEOCODER FOR CITY AND STATE/////////////////////
 
-    
-
-    //Get user location Lat Lng
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        let lat = position.coords.latitude
-        let lng = position.coords.longitude
-        console.log("getCurrentPosition Success " + lat + lng) // logs position correctly
-        this.setState({
-          location: {
-            lat: lat,
-            lng: lng
-          }
-        })
-      },
-      (error) => {
-        console.error(JSON.stringify(error))
-      }, {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 1000
+   const TOKEN = 'ea7f69e10eff85';
+    this.getData = () =>
+      console.log("getting")
+      axios.get(`https://ipinfo.io/json?token=${TOKEN}`)
+      // .then(res => console.log(res.data.region))
+      // .then(res => console.log(res.data.city))
+      .then(res => {
+        this.setState({region: res.data.region,
+        city: res.data.city})
       })
+
+    this.getData()
+  
+    
+/////////////GEOLOCATION//////////////////////////////////////
+    // //Get user location Lat Lng
+    // navigator.geolocation.getCurrentPosition(
+    //   (position) => {
+    //     let lat = position.coords.latitude
+    //     let lng = position.coords.longitude
+    //     console.log("getCurrentPosition Success " + lat + lng) // logs position correctly
+    //     this.setState({
+    //       location: {
+    //         lat: lat,
+    //         lng: lng
+    //       }
+    //     })
+    //   },
+    //   (error) => {
+    //     console.error(JSON.stringify(error))
+    //   }, {
+    //     enableHighAccuracy: true,
+    //     timeout: 20000,
+    //     maximumAge: 1000
+    //   })
 
     ///////////////////////////////////////////
     //Get resteraunt locations for pins on map
       
 
-    FS.getRestaurants(`${this.state.location.lat}`, `${this.state.location.lng}`)  //will show map with user location
+    FS.getRestaurants(`${this.state.location.lat}`, `${this.state.location.lng}, "food"`)  //will show map with user location
     
-      // FS.getRestaurants(42.5130808, -82.88185849999999) will show places near coords
+      // FS.getRestaurants(42.5130808, -82.88185849999999, "food") //will show places near coords
       .then(res => {
           this.setState({
             meta: {
@@ -388,11 +409,13 @@ class App extends Component {
   render() {
     return (<div className='App'>
       <header className='header' role="banner">
-        <h2 className='header-title'>{this.state.location.lat}</h2>
+        <h2 className='header-title'>{this.state.city}</h2>
       </header>
       <main>
         <section>
           <FilterComponent
+            city={this.state.city}
+            region={this.state.region}
             filterInput={this.filterInput}
             query={this.state.query}
             clearFilterInput={this.clearFilterInput}
